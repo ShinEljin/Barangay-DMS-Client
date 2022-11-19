@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: white;
+  }
+
+  @media (max-height: 612px) {
+    .h-desktop {
+      height: 45rem;
+    }
+  }
+}
