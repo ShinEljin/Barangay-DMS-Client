@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Otp from "./pages/Otp";
-import RegSuccess from "./pages/RegSuccess";
-import ForgotPass from "./pages/ForgotPass";
-import NewPass from "./pages/NewPass";
-import LoggedIn from "./pages/LoggedIn";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Login/Register";
+import Otp from "./pages/Login/Otp";
+import RegSuccess from "./pages/Login/RegSuccess";
+import ForgotPass from "./pages/Login/ForgotPass";
+import NewPass from "./pages/Login/NewPass";
+import LoggedIn from "./pages/Login/LoggedIn";
 
 function App() {
   return (

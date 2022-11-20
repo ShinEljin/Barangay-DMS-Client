@@ -1,27 +1,10 @@
 import { Link } from "react-router-dom";
+import HeaderLogo from "../../components/Login/HeaderLogo";
 
 function RegSuccess() {
   return (
     <div className="bg-main-bg bg-cover h-screen flex justify-end h-desktop">
-      <div className="flex justify-between absolute w-full font-montserrat tracking-wide z-10 p-8">
-        <div className="flex items-center font-semibold">
-          <img
-            className="h-20 | md:h-24"
-            src="./images/Barangay_Seal.png"
-            alt="Barangay_Seal"
-          />
-          <span className="invisible md:visible font-montserrat ml-3 text-xl">
-            BARANGAY <br />
-            MANAGEMENT <br />
-            SYSTEM
-          </span>
-        </div>
-        <img
-          className="h-20 | md:h-24"
-          src="./images/Manila_Seal.png"
-          alt="Manila_Seal"
-        />
-      </div>
+      <HeaderLogo />
 
       <div className="bg-main-low-opacity flex flex-col w-full h-desktop | md:justify-center md:w-[32rem] md:rounded-l-3xl">
         <div className="flex flex-col relative top-60 | md:top-0">
