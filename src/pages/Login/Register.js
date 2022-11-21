@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
   isNotEmpty,
@@ -17,6 +18,9 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState(null);
+
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
 
   const { register, serverError, isLoading } = useRegister();
 
@@ -47,6 +51,14 @@ function Register() {
     await register(username, email, password);
   }
 
+  function togglePass() {
+    setPasswordShown(!passwordShown);
+  }
+
+  function toggleConfirmPass() {
+    setConfirmPasswordShown(!confirmPasswordShown);
+  }
+
   return (
     <div className="bg-main-bg bg-cover h-screen flex justify-end h-desktop">
       <HeaderLogo />
@@ -73,19 +85,51 @@ function Register() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <label htmlFor="password">Password</label>
-              <input
-                className="w-full h-11 rounded-lg border-0 p-3 mb-2 text-black font-normal"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                {passwordShown ? (
+                  <FaEyeSlash
+                    className="text-3xl absolute right-3 top-2 fill-blue-900 cursor-pointer"
+                    inverse
+                    onClick={togglePass}
+                  />
+                ) : (
+                  <FaEye
+                    className="text-3xl absolute right-3 top-2 fill-blue-900 cursor-pointer"
+                    inverse
+                    onClick={togglePass}
+                  />
+                )}
+                <input
+                  className="w-full h-11 rounded-lg border-0 p-3 mb-2 text-black font-normal"
+                  type={passwordShown ? "text" : "password"}
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@.!%&*?])[A-Za-z\d#$@!%.&*?]{8,30}$"
+                  title="Must contain at least one number, special character, uppercase and lowercase letter, and at least 8 or more characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
               <label htmlFor="password">Confirm Password</label>
-              <input
-                className="w-full h-11 rounded-lg border-0 p-3  text-black font-normal"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
+              <div className="relative">
+                {confirmPasswordShown ? (
+                  <FaEyeSlash
+                    className="text-3xl absolute right-3 top-2 fill-blue-900 cursor-pointer"
+                    inverse
+                    onClick={toggleConfirmPass}
+                  />
+                ) : (
+                  <FaEye
+                    className="text-3xl absolute right-3 top-2 fill-blue-900 cursor-pointer"
+                    inverse
+                    onClick={toggleConfirmPass}
+                  />
+                )}
+                <input
+                  className="w-full h-11 rounded-lg border-0 p-3  text-black font-normal"
+                  type={confirmPasswordShown ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
 
               <p className="font-semibold text-red-500 mb-9 mt-2">
                 {error ? error : serverError}

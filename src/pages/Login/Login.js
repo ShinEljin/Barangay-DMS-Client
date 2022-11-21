@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import HeaderLogo from "../../components/Login/HeaderLogo";
 import { useLogin } from "../../hooks/useLogin";
@@ -9,6 +10,8 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
+
+  const [passwordShown, setPasswordShown] = useState(false);
 
   const { login, serverError, isLoading } = useLogin();
 
@@ -21,12 +24,16 @@ function Login() {
     }
 
     if (!isValidEmail(email)) {
-      setError("Email is not valid");
+      setError("Please enter correct email format");
       return;
     }
 
     setError(null);
     await login(email, password);
+  }
+
+  function togglePass() {
+    setPasswordShown(!passwordShown);
   }
 
   return (
@@ -50,18 +57,33 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <label htmlFor="password">Enter Password</label>
-              <input
-                className="w-full h-11 rounded-lg border-0 mb-1 p-3 text-black font-normal"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                {passwordShown ? (
+                  <FaEyeSlash
+                    className="text-3xl absolute right-3 top-2 fill-blue-900"
+                    inverse
+                    onClick={togglePass}
+                  />
+                ) : (
+                  <FaEye
+                    className="text-3xl absolute right-3 top-2 fill-blue-900"
+                    inverse
+                    onClick={togglePass}
+                  />
+                )}
+                <input
+                  className="w-full h-11 rounded-lg border-0 mb-1 p-3 text-black font-normal"
+                  type={passwordShown ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
             </div>
             <div className="flex justify-between pb-20">
               <p className="font-semibold text-red-500">
                 {error ? error : serverError}
               </p>
-              <p className="font-extralight underline text-red-500">
+              <p className="font-extralight underline text-main-red">
                 <Link to="/forgot">Forgot Password</Link>
               </p>
             </div>
