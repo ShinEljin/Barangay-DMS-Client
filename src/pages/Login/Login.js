@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import HeaderLogo from "../../components/Login/HeaderLogo";
@@ -61,13 +61,11 @@ function Login() {
                 {passwordShown ? (
                   <FaEyeSlash
                     className="text-3xl absolute right-3 top-2 fill-blue-900"
-                    inverse
                     onClick={togglePass}
                   />
                 ) : (
                   <FaEye
                     className="text-3xl absolute right-3 top-2 fill-blue-900"
-                    inverse
                     onClick={togglePass}
                   />
                 )}
@@ -79,12 +77,9 @@ function Login() {
                 />
               </div>
             </div>
-            <div className="flex justify-between pb-20">
+            <div className="flex justify-start pb-20">
               <p className="font-semibold text-red-500">
                 {error ? error : serverError}
-              </p>
-              <p className="font-extralight underline text-main-red">
-                <Link to="/forgot">Forgot Password</Link>
               </p>
             </div>
 
@@ -96,18 +91,6 @@ function Login() {
               Login
             </button>
           </form>
-
-          <div className="mx-auto relative top-6">
-            <p className="font-light">
-              Need an account?
-              <Link
-                className="text-main-red underline font-bold ml-1"
-                to="/register"
-              >
-                Register
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ export const useLogin = () => {
       if (response.status === 201) {
         localStorage.setItem("user", JSON.stringify(response.data));
 
-        dispatch({ type: "LOGIN", payload: response });
+        dispatch({ type: "LOGIN", payload: response.data });
 
         setIsLoading(false);
 

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderLogo from "../../components/Login/HeaderLogo";
 import { useLogout } from "../../hooks/useLogout";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useEffect } from "react";
 
 function LoggedIn() {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ function LoggedIn() {
     navigate("/");
   }
 
+  useEffect(() => {}, []);
+
   return (
     <div className="bg-main-bg bg-cover h-screen flex justify-end h-desktop">
       <HeaderLogo />
@@ -23,8 +26,8 @@ function LoggedIn() {
           <span className="font-montserrat mx-auto text-5xl font-semibold mb-5 text-center">
             Logged in as
           </span>
-          <p className="mx-auto font-light">{user.data.username}</p>
-          <p className="mx-auto font-light">{user.data.email}</p>
+          <p className="mx-auto font-light">{user && user.username}</p>
+          <p className="mx-auto font-light">{user && user.email}</p>
           <p className="mx-auto font-light text-main-red underline">
             <button onClick={Logout}>Logout</button>
           </p>
