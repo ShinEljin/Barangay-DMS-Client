@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import HeaderLogo from "../../components/Login/HeaderLogo";
 import { useLogin } from "../../hooks/useLogin";
 import { isNotEmptyLogin, isValidEmail } from "../../validation/validation";
@@ -42,21 +41,25 @@ function Login() {
 
       <div className="bg-main-low-opacity flex flex-col w-full h-desktop | md:justify-center md:w-[32rem] md:rounded-l-3xl">
         <div className="flex flex-col relative top-32 | md:top-0">
-          <span className="font-montserrat mx-auto text-2xl font-semibold mb-12 text-center | md:absolute md:invisible md:text-3xl">
+          <span className="font-montserrat mx-auto text-2xl font-semibold mb-12 text-center text-white | md:absolute md:invisible md:text-3xl">
             BARANGAY <br />
             MANAGEMENT <br />
             SYSTEM
           </span>
           <form onSubmit={handleSubmit} className="w-4/5 mx-auto">
             <div className="w-full font-extralight font-poppins">
-              <label htmlFor="email">Enter Email</label>
+              <label className="text-white" htmlFor="email">
+                Enter Email
+              </label>
               <input
                 className="w-full h-11 rounded-lg border-0 p-3 mb-2 text-black font-normal"
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <label htmlFor="password">Enter Password</label>
+              <label className="text-white" htmlFor="password">
+                Enter Password
+              </label>
               <div className="relative">
                 {passwordShown ? (
                   <FaEyeSlash

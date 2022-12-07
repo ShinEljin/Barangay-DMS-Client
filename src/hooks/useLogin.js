@@ -29,7 +29,7 @@ export const useLogin = () => {
 
         setIsLoading(false);
 
-        navigate("/logged-in");
+        navigate("/user/dashboard");
       }
     } catch (error) {
       setServerError(error.response.data.message);

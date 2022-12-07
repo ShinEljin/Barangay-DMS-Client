@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         "main-bg": "url('../public/images/Login_Desktop_BG.png')",
+        "navbar-bg": "url('../public/images/Navbar_BG.png')",
       },
       colors: {
         "main-red": "#DC715C",
@@ -17,6 +18,9 @@ module.exports = {
         "main-white": "#fff",
         "main-off-white": "#E5E4E2",
         "main-low-opacity": "rgba(14, 15, 34, 0.71)",
+        "light-violet": "#FBFAFF",
+        "light-gray": "#F3F3F3",
+        "dark-blue": "#0D0F33",
       },
     },
   },

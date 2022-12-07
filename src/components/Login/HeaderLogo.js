@@ -18,7 +18,7 @@ function HeaderLogo() {
           src="./images/Barangay_Seal.png"
           alt="Barangay_Seal"
         />
-        <span className="invisible md:visible font-montserrat ml-3 text-xl">
+        <span className="invisible md:visible font-montserrat ml-3 text-xl text-white">
           BARANGAY <br />
           MANAGEMENT <br />
           SYSTEM
