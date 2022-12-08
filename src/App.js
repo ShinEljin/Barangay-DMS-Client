@@ -9,7 +9,6 @@ import Logs from "./pages/DMS/Logs";
 import Records from "./pages/DMS/Records";
 import Settings from "./pages/DMS/Settings";
 import NavBars from "./components/DMS/NavBars";
-import CertificateTemplate from "./components/DMS/CertificateTemplate";
 
 import { useAuthContext } from "./hooks/useAuthContext";
 import { useState } from "react";
@@ -29,9 +28,7 @@ function App() {
         </Route>
         <Route
           path="/user"
-          element={
-            user ? <NavBars tab={tab} setTab={setTab} /> : <Navigate to="/" />
-          }
+          element={user ? <NavBars tab={tab} setTab={setTab} /> : <Login />}
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="requests" element={<Requests />} />
@@ -40,8 +37,7 @@ function App() {
           <Route path="records" element={<Records />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-
-        {/* <Route path="/pdf" element={<CertificateTemplate />} /> */}
+        \
       </Routes>
     </>
   );

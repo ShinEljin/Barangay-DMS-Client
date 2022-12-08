@@ -8,17 +8,21 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DangerousIcon from "@mui/icons-material/Dangerous";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
+import ReactToPrint from "react-to-print";
 
 import api from "../../api/index";
 import SwalLoading from "../../components/DMS/SwalLoading";
+import CertificateTemplate from "../../components/DMS/CertificateTemplate";
 
 function Requests(props) {
   const [requests, setRequests] = useState(null);
   const [requestNumber, setRequestNumber] = useState(null);
 
   const { startLoading, stopLoading } = SwalLoading();
+
+  const componentsRef = useRef([]);
 
   useEffect(() => {
     async function getRequests() {
@@ -167,8 +171,6 @@ function Requests(props) {
     });
   }
 
-  // async function printPdf(request) {}
-
   return (
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">
       <div className="mt-1 mr-5 transition-all duration-300 | md:ml-[90px] | xl:ml-[350px] ">
@@ -267,7 +269,7 @@ function Requests(props) {
             {!requests && startLoading()}
             {requests && stopLoading()}
             {requests &&
-              requests.map((request) => {
+              requests.map((request, index) => {
                 return (
                   <tr
                     key={request._id}
@@ -311,6 +313,7 @@ function Requests(props) {
                           onClick={(event) => getInfo(request)}
                         />
                       </button>
+
                       <button data-title="MARK AS PROCESSED">
                         <FactCheckIcon
                           className="hover:cursor-pointer"
@@ -329,23 +332,34 @@ function Requests(props) {
                           onClick={(event) => processRequest(request)}
                         />
                       </button>
-                      <button>
-                        <LocalPrintshopIcon
-                          className="hover:cursor-pointer"
-                          color="#000000"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#033AA9",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                        />
-                      </button>
+
+                      <ReactToPrint
+                        trigger={() => (
+                          <button>
+                            <LocalPrintshopIcon
+                              className="hover:cursor-pointer"
+                              color="#000000"
+                              sx={{
+                                fontSize: "40px",
+                                color: "#fff",
+                                backgroundColor: "#033AA9",
+                                borderRadius: "10px",
+                                margin: "5px",
+                                padding: "3px",
+                                "&:hover": {
+                                  opacity: 0.6,
+                                },
+                              }}
+                            />
+                          </button>
+                        )}
+                        content={() => componentsRef.current[index]}
+                      />
+
+                      <CertificateTemplate
+                        ref={(el) => (componentsRef.current[index] = el)}
+                        requestDetails={request}
+                      />
 
                       <button data-title="REJECT REQUEST">
                         <DangerousIcon
