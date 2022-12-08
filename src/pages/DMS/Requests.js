@@ -188,6 +188,8 @@ function Requests(props) {
           responseType: "blob",
         });
 
+        console.log(response);
+
         const pdfBlob = new Blob([response.data], { type: "application/pdf" });
         saveAs(pdfBlob, "certificate.pdf");
       } catch (error) {
