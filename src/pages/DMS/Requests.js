@@ -6,12 +6,10 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DangerousIcon from "@mui/icons-material/Dangerous";
-import DownloadIcon from "@mui/icons-material/Download";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { saveAs } from "file-saver";
 
 import api from "../../api/index";
 import SwalLoading from "../../components/DMS/SwalLoading";
@@ -169,65 +167,7 @@ function Requests(props) {
     });
   }
 
-  async function createAndDownloadPdf(request) {
-    if (
-      request.document === "Barangay Certificate" ||
-      request.document === "Barangay Indigency"
-    ) {
-      const pdfDetails = {
-        firstName: request.recordID.firstName,
-        middleInitial: request.recordID.middleName.slice(0, 1),
-        lastName: request.recordID.lastName,
-        age: request.recordID.age,
-        address: request.recordID.address,
-        purpose: request.purpose,
-      };
-
-      try {
-        const response = await api.post("/form/create-pdf", pdfDetails, {
-          responseType: "blob",
-        });
-
-        console.log(response);
-
-        const pdfBlob = new Blob([response.data], { type: "application/pdf" });
-        saveAs(pdfBlob, "certificate.pdf");
-      } catch (error) {
-        console.log(error);
-        Swal.fire("Something went wrong", "", "error");
-      }
-    }
-  }
-
-  async function printPdf(request) {
-    if (
-      request.document === "Barangay Certificate" ||
-      request.document === "Barangay Indigency"
-    ) {
-      const pdfDetails = {
-        firstName: request.recordID.firstName,
-        middleInitial: request.recordID.middleName.slice(0, 1),
-        lastName: request.recordID.lastName,
-        age: request.recordID.age,
-        address: request.recordID.address,
-        purpose: request.purpose,
-      };
-
-      try {
-        const response = await api.post("/form/create-pdf", pdfDetails, {
-          responseType: "blob",
-        });
-
-        const pdfBlob = new Blob([response.data], { type: "application/pdf" });
-
-        const url = URL.createObjectURL(pdfBlob);
-        window.open(url);
-      } catch (error) {
-        console.log(error);
-        Swal.fire("Something went wrong", "", "error");
-      }
-    }
-  }
+  // async function printPdf(request) {}
 
   return (
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">
@@ -390,24 +330,6 @@ function Requests(props) {
                         />
                       </button>
                       <button>
-                        <DownloadIcon
-                          className="hover:cursor-pointer"
-                          color="#000000"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#033AA9",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                          onClick={(event) => createAndDownloadPdf(request)}
-                        />
-                      </button>
-                      <button>
                         <LocalPrintshopIcon
                           className="hover:cursor-pointer"
                           color="#000000"
@@ -422,7 +344,6 @@ function Requests(props) {
                               opacity: 0.6,
                             },
                           }}
-                          onClick={(event) => printPdf(request)}
                         />
                       </button>
 
