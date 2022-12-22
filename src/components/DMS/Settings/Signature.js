@@ -3,8 +3,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "./UploadImage";
 
 function Signature({ signatureOpen, setSignatureOpen }) {
-  const [chairmanSignature, setChairmanSignature] = useState(null);
-  const [secretarySignature, setSecretarySignature] = useState(null);
+  const [chairmanSignatureRole] = useState("Chairman");
+  const [chairmanSignaturePhoto, setChairmanSignaturePhoto] = useState(null);
+  const [secretarySignatureRole] = useState("Secretary");
+  const [secretarySignaturePhoto, setSecretarySignaturePhoto] = useState(null);
 
   return (
     <div className="bg-white flex flex-col justify-center m-5 mt-0 rounded-xl max-w-sm relative">
@@ -17,14 +19,16 @@ function Signature({ signatureOpen, setSignatureOpen }) {
       </div>
       <UploadImage
         signatureTitle="Chairman Signature"
-        signatureRole={chairmanSignature}
-        setSignatureRole={setChairmanSignature}
+        signatureRole={chairmanSignatureRole}
+        signaturePhoto={chairmanSignaturePhoto}
+        setSignaturePhoto={setChairmanSignaturePhoto}
         inputID="chairmanSignature"
       />
       <UploadImage
         signatureTitle="Secretary Signature"
-        signatureRole={secretarySignature}
-        setSignatureRole={setSecretarySignature}
+        signatureRole={secretarySignatureRole}
+        signaturePhoto={secretarySignaturePhoto}
+        setSignaturePhoto={setSecretarySignaturePhoto}
         inputID="secretarySignature"
       />
     </div>

@@ -7,6 +7,7 @@ import Requests from "./pages/DMS/Requests";
 import Claiming from "./pages/DMS/Claiming";
 import Logs from "./pages/DMS/Logs";
 import Records from "./pages/DMS/Records";
+import Reports from "./pages/DMS/Reports";
 import Settings from "./pages/DMS/Settings";
 import NavBars from "./components/DMS/NavBars";
 
@@ -35,9 +36,9 @@ function App() {
           <Route path="claiming" element={<Claiming />} />
           <Route path="logs" element={<Logs />} />
           <Route path="records" element={<Records />} />
+          <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-        \
       </Routes>
     </>
   );

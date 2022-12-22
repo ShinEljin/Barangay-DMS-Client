@@ -3,6 +3,7 @@ import TopicOutlinedIcon from "@mui/icons-material/TopicOutlined";
 import DomainVerificationOutlinedIcon from "@mui/icons-material/DomainVerificationOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import ManageSearchOutlinedIcon from "@mui/icons-material/ManageSearchOutlined";
+import HomeRepairServiceOutlinedIcon from "@mui/icons-material/HomeRepairServiceOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
@@ -117,6 +118,18 @@ function Sidebar({ setTab, tab }) {
                 icon=<ManageSearchOutlinedIcon sx={{ fontSize: 40 }} />
                 className={
                   tab === "Records"
+                    ? "bg-white text-dark-blue rounded-l-3xl"
+                    : ""
+                }
+              />
+            </Link>
+
+            <Link to="/user/reports" onClick={() => setTabStorage("Reports")}>
+              <SidebarListItem
+                item="Reports"
+                icon=<HomeRepairServiceOutlinedIcon sx={{ fontSize: 40 }} />
+                className={
+                  tab === "Reports"
                     ? "bg-white text-dark-blue rounded-l-3xl"
                     : ""
                 }

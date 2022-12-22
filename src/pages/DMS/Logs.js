@@ -9,30 +9,46 @@ import SwalLoading from "../../components/DMS/SwalLoading";
 
 function Logs() {
   const [requests, setRequests] = useState([]);
+  const [requestsEmpty, setRequestsEmpty] = useState(false);
   const [filteredRequests, setFilteredRequests] = useState(requests);
   const [searchField, setSearchField] = useState("");
-  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("Claimed");
+  const [isStatusOpen, setIsStatusOpen] = useState(false);
 
   const { startLoading, stopLoading } = SwalLoading();
 
   useEffect(() => {
     async function getRequests() {
-      const response = await api.get("/form/logs");
+      const response = await api.get(`/form/logs/${statusFilter}`);
 
-      setRequests(response.data);
+      if (response.data.length === 0) {
+        setRequestsEmpty(true);
+      } else {
+        setRequests(response.data);
+        setRequestsEmpty(false);
+      }
     }
 
     getRequests();
-  }, []);
+  }, [statusFilter]);
 
   function getInfo(request) {
     Swal.fire({
-      html: `<div class="text-left">
-              <strong>REQUEST DETAILS</strong> <br/> <br/>
-              <strong>Request ID:</strong> ${request._id} <br/>
+      html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
+            <div class="text-left">
+            <strong>Request ID:</strong> ${request._id} <br/>
+              <strong>Request Date:</strong> ${request.requestDate} <br/>
+              <strong>Processed Date:</strong> ${request.processedDate} <br/>
+              <strong>Claimed Date:</strong> ${request.claimedDate} <br/>
               <strong>Document:</strong> ${request.document} <br/>
               <strong>Purpose:</strong> ${request.purpose} <br/>
-              <strong>Specify:</strong> ${request.specify} <br/>
+              <strong>Specify:</strong> ${request.specify} <br/> <br/> 
+            </div>
+           
+              <hr>
+              <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
+            <div  class="text-left">
+            <strong>Record ID:</strong> ${request.recordID._id} <br/>
               <strong>Fullname:</strong> ${
                 request.recordID.firstName +
                 " " +
@@ -40,26 +56,28 @@ function Logs() {
                 " " +
                 request.recordID.lastName
               } <br/>
+              <strong>Status:</strong> ${request.recordID.recordStatus} <br/>
               <strong>Address:</strong> ${request.recordID.address} <br/>
-              <strong>Age:</strong> ${request.recordID.age} <br/>
               <strong>Phone:</strong> ${request.recordID.phone} <br/>
+              <strong>Email:</strong> ${request.recordID.email} <br/>
               <strong>Birth Date:</strong> ${request.recordID.bdate} <br/>
-              <strong>Gender:</strong> ${request.recordID.gender} <br/>
               <strong>Person To Notify:</strong> ${
                 request.recordID.person2Notif
+              } <br/>
+              <strong>Relationship:</strong> ${
+                request.recordID.relationship
               } <br/>
               <strong>Person To Notify (Number):</strong> ${
                 request.recordID.person2NotifPhone
               } <br/>
+              <strong>Gender:</strong> ${request.recordID.gender} <br/>
               <strong>School Attainment:</strong> ${
                 request.recordID.schoolAttainment
               } <br/>
               <strong>Years of Residency:</strong> ${
-                request.recordID.yearsIfResidency
+                request.recordID.yearsOfResidency
               } <br/>
-              <strong>Request Date:</strong> ${request.requestDate} <br/>
-              <strong>Processed Date:</strong> ${request.processedDate} <br/>
-             </div  `,
+             </div>`,
     });
   }
 
@@ -100,30 +118,6 @@ function Logs() {
             <button className="bg-dark-blue text-white px-3 py-2 rounded-xl cursor-pointer mr-2 | text-sm | lg:text-base lg:px-5 lg:py-3 hover:opacity-70 ">
               Download Logs
             </button>
-
-            <button
-              className="px-3 py-2 rounded-xl cursor-pointer | text-sm | lg:text-base lg:px-5 lg:py-3 relative"
-              onClick={() => setIsSortOpen(!isSortOpen)}
-            >
-              Sort by
-              <ArrowDropDownOutlinedIcon />
-              {isSortOpen && (
-                <ul className="absolute bg-[#ffffffef] w-[14rem] right-6 text-lg">
-                  <li
-                    className="hover:bg-slate-300 p-2 font-semibold"
-                    // onClick={() => setSortBy(1)}
-                  >
-                    Last Name (A-Z)
-                  </li>
-                  <li
-                    className="hover:bg-slate-300 p-2 font-semibold"
-                    // onClick={() => setSortBy(-1)}
-                  >
-                    Last Name (Z-A)
-                  </li>
-                </ul>
-              )}
-            </button>
           </div>
         </div>
       </div>
@@ -134,22 +128,64 @@ function Logs() {
             <tr>
               <td className="p-4">Claimed Date</td>
               <td className="p-4">Name</td>
-              <td>
-                Document <ArrowDropDownOutlinedIcon />
-              </td>
+              <td>Document</td>
               <td className="invisible absolute | md:visible md:static">
                 Purpose
               </td>
-              <td className="invisible absolute | md:visible md:static">
+              <td
+                className="relative hover:cursor-pointer "
+                onClick={() => setIsStatusOpen(!isStatusOpen)}
+              >
                 Status <ArrowDropDownOutlinedIcon />
+                {isStatusOpen && (
+                  <ul className="absolute bg-[#ffffffef] w-[14rem] right-6 text-lg z-10 shadow-lg">
+                    <li
+                      className="hover:bg-slate-300 hover:cursor-pointer p-2 font-semibold text-black "
+                      onClick={(e) => {
+                        setStatusFilter("Claimed");
+                        setRequests([]);
+                        setFilteredRequests([]);
+                      }}
+                    >
+                      Claimed
+                    </li>
+                    <li
+                      className="hover:bg-slate-300 hover:cursor-pointer p-2 font-semibold text-black"
+                      onClick={(e) => {
+                        setStatusFilter("Archive");
+                        setRequests([]);
+                        setFilteredRequests([]);
+                      }}
+                    >
+                      Archive
+                    </li>
+                    <li
+                      className="hover:bg-slate-300 hover:cursor-pointer p-2 font-semibold text-black"
+                      onClick={(e) => {
+                        setStatusFilter("Rejected");
+                        setRequests([]);
+                        setFilteredRequests([]);
+                      }}
+                    >
+                      Rejected
+                    </li>
+                  </ul>
+                )}
               </td>
               <td width="10%">Action</td>
             </tr>
           </thead>
 
           <tbody>
-            {requests.length === 0 && startLoading()}
-            {filteredRequests.length !== 0 && stopLoading()}
+            {requests.length === 0 && !requestsEmpty && startLoading()}
+            {(filteredRequests.length !== 0 || requestsEmpty) && stopLoading()}
+            {requestsEmpty && (
+              <tr>
+                <td className="align-middle p-2 py-16" colSpan={8}>
+                  NO LOGS FOUND!
+                </td>
+              </tr>
+            )}
             {filteredRequests.length !== 0 &&
               filteredRequests.map((request) => {
                 return (
@@ -158,7 +194,7 @@ function Logs() {
                     className="border-b border-gray bg-white text-black"
                   >
                     <td className="p-2 py-5">{request.claimedDate}</td>
-                    <td>
+                    <td className="p-2 py-5">
                       {request.recordID.firstName +
                         " " +
                         request.recordID.middleName +

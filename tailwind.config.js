@@ -5,11 +5,15 @@ module.exports = {
     fontFamily: {
       montserrat: ["Montserrat"],
       poppins: ["Poppins"],
+      roboto: ["Roboto Slab"],
     },
     extend: {
       backgroundImage: {
         "main-bg": "url('../public/images/Login_Desktop_BG.png')",
         "navbar-bg": "url('../public/images/Navbar_BG.png')",
+        "ID-bg": "url('https://imgur.com/gallery/OPrMgdn')",
+        "template-bg":
+          "url('https://upload.wikimedia.org/wikipedia/commons/8/8e/Barangay.svg')",
       },
       colors: {
         "main-red": "#DC715C",

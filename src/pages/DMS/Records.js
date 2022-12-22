@@ -12,6 +12,7 @@ import SwalLoading from "../../components/DMS/SwalLoading";
 
 function Records() {
   const [records, setRecords] = useState([]);
+  const [recordsEmpty, setRecordsEmpty] = useState(false);
   const [filteredRecords, setFilteredRecords] = useState(records);
   const [searchField, setSearchField] = useState("");
   const [sortBy, setSortBy] = useState(1);
@@ -25,32 +26,84 @@ function Records() {
     async function getRequests() {
       const response = await api.get(`/form/records/${sortCategory}/${sortBy}`);
 
-      setRecords(response.data);
-      setUserNumber(response.data.length);
+      if (response.data.length === 0) {
+        setRecordsEmpty(true);
+        setUserNumber(response.data.length);
+      } else {
+        setRecords(response.data);
+        setUserNumber(response.data.length);
+        setRecordsEmpty(false);
+      }
     }
 
     getRequests();
   }, [sortBy, sortCategory, userNumber]);
 
   function getInfo(record) {
-    Swal.fire({
-      html: `<div class="text-left">
-              <strong>RECORD DETAILS</strong> <br/> <br/>
-              <strong>Record ID:</strong> ${record._id} <br/>
-              <strong>Last Name:</strong> ${record.lastName} <br/>
-              <strong>First Name:</strong> ${record.firstName} <br/>
-              <strong>Middle Name:</strong> ${record.middleName} <br/>
-              <strong>Address:</strong> ${record.address} <br/>
-              <strong>Age:</strong> ${record.age} <br/>
-              <strong>Phone:</strong> ${record.phone} <br/>
-              <strong>Birth Date:</strong> ${record.bdate} <br/>
-              <strong>Gender:</strong> ${record.gender} <br/>
-              <strong>Person To Notify:</strong> ${record.person2Notif} <br/>
-              <strong>Person To Notify (Number):</strong> ${record.person2NotifPhone} <br/>
-              <strong>School Attainment:</strong> ${record.schoolAttainment} <br/>
-              <strong>Years of Residency:</strong> ${record.yearsIfResidency}
-            </div>`,
-    });
+    if (record.recordStatus === "Pending") {
+      Swal.fire({
+        html: `<h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
+               <div class="text-left">
+                <strong>Record ID:</strong> ${record._id} <br/>
+                <strong>Fullname:</strong> ${
+                  record.firstName +
+                  " " +
+                  record.middleName +
+                  " " +
+                  record.lastName
+                } <br/>
+                <strong>Status:</strong> ${record.recordStatus} <br/>
+                <strong>Address:</strong> ${record.address} <br/>
+                <strong>Phone:</strong> ${record.phone} <br/>
+                <strong>Email:</strong> ${record.email} <br/>
+                <strong>Birth Date:</strong> ${record.bdate} <br/>
+                <strong>Person To Notify:</strong> ${record.person2Notif} <br/>
+                <strong>Relationship:</strong> ${record.relationship} <br/>
+                <strong>Person To Notify (Number):</strong> ${
+                  record.person2NotifPhone
+                } <br/>
+                <strong>Gender:</strong> ${record.gender} <br/>
+                <strong>School Attainment:</strong> ${
+                  record.schoolAttainment
+                } <br/>
+                <strong>Years of Residency:</strong> ${
+                  record.yearsOfResidency
+                } <br/>
+                <strong>Proof:</strong>
+                <img src=${record.proofFront} alt="no-proof-found" /> <br/>
+                <img src=${record.proofBack} alt="no-back-page-found" /> <br/>
+              </div>`,
+      });
+    } else {
+      Swal.fire({
+        html: `<h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
+               <div class="text-left">
+                <strong>Record ID:</strong> ${record._id} <br/>
+                <strong>Fullname:</strong> ${
+                  record.firstName +
+                  " " +
+                  record.middleName +
+                  " " +
+                  record.lastName
+                } <br/>
+                <strong>Status:</strong> ${record.recordStatus} <br/>
+                <strong>Address:</strong> ${record.address} <br/>
+                <strong>Phone:</strong> ${record.phone} <br/>
+                <strong>Email:</strong> ${record.email} <br/>
+                <strong>Birth Date:</strong> ${record.bdate} <br/>
+                <strong>Person To Notify:</strong> ${record.person2Notif} <br/>
+                <strong>Relationship:</strong> ${record.relationship} <br/>
+                <strong>Person To Notify (Number):</strong> ${
+                  record.person2NotifPhone
+                } <br/>
+                <strong>Gender:</strong> ${record.gender} <br/>
+                <strong>School Attainment:</strong> ${
+                  record.schoolAttainment
+                } <br/>
+                <strong>Years of Residency:</strong> ${record.yearsOfResidency}
+              </div>`,
+      });
+    }
   }
 
   function deleteRecord(record) {
@@ -183,24 +236,29 @@ function Records() {
             <tr>
               <td className="p-4">Full Name</td>
               <td className="p-4 invisible absolute | md:visible md:static">
-                Age
+                Birthday
               </td>
-              <td
-                className="p-4 invisible absolute | md:visible md:static"
-                width="30%"
-              >
+              <td className="p-4 invisible absolute | md:visible md:static">
                 Address
               </td>
               <td className="p-4 invisible absolute | md:visible md:static">
                 Phone Number
               </td>
-              <td width="10%">Action</td>
+              <td>Status</td>
+              <td>Action</td>
             </tr>
           </thead>
 
           <tbody>
             {records.length === 0 && startLoading()}
-            {filteredRecords.length !== 0 && stopLoading()}
+            {(filteredRecords.length !== 0 || recordsEmpty) && stopLoading()}
+            {recordsEmpty && (
+              <tr>
+                <td className="align-middle p-2 py-10" colSpan={8}>
+                  NO RECORDS FOUND!
+                </td>
+              </tr>
+            )}
             {filteredRecords.length !== 0 &&
               filteredRecords.map((record) => {
                 return (
@@ -208,7 +266,7 @@ function Records() {
                     key={record._id}
                     className="border-b border-gray bg-white text-black"
                   >
-                    <td>
+                    <td className="p-2 py-5">
                       {record.lastName +
                         ", " +
                         record.firstName +
@@ -216,55 +274,51 @@ function Records() {
                         record.middleName}
                     </td>
                     <td className="p-1 invisible absolute | md:visible md:static">
-                      {record.age}
+                      {record.bdate}
                     </td>
-                    <td
-                      width="30%"
-                      className="p-1 invisible absolute | md:visible md:static"
-                    >
+                    <td className="p-1 invisible absolute | md:visible md:static">
                       {record.address}
                     </td>
                     <td className="p-1 invisible absolute | md:visible md:static">
                       {record.phone}
                     </td>
+                    <td> {record.recordStatus}</td>
                     <td>
-                      <div className="flex flex-row">
-                        <button data-title="SEE ALL DETAILS">
-                          <AccountBoxIcon
-                            className="hover:cursor-pointer"
-                            sx={{
-                              fontSize: "40px",
-                              color: "#fff",
-                              backgroundColor: "#000000",
-                              borderRadius: "10px",
-                              margin: "5px",
-                              padding: "3px",
-                              "&:hover": {
-                                opacity: 0.6,
-                              },
-                            }}
-                            onClick={(event) => getInfo(record)}
-                          />
-                        </button>
-                        <button data-title="DELETE RECORD">
-                          <DeleteIcon
-                            className="hover:cursor-pointer"
-                            color="#000000"
-                            sx={{
-                              fontSize: "40px",
-                              color: "#fff",
-                              backgroundColor: "#CF1429",
-                              borderRadius: "10px",
-                              margin: "5px",
-                              padding: "3px",
-                              "&:hover": {
-                                opacity: 0.6,
-                              },
-                            }}
-                            onClick={(event) => deleteRecord(record)}
-                          />
-                        </button>
-                      </div>
+                      <button data-title="SEE ALL DETAILS">
+                        <AccountBoxIcon
+                          className="hover:cursor-pointer"
+                          sx={{
+                            fontSize: "40px",
+                            color: "#fff",
+                            backgroundColor: "#000000",
+                            borderRadius: "10px",
+                            margin: "5px",
+                            padding: "3px",
+                            "&:hover": {
+                              opacity: 0.6,
+                            },
+                          }}
+                          onClick={(event) => getInfo(record)}
+                        />
+                      </button>
+                      <button data-title="DELETE RECORD">
+                        <DeleteIcon
+                          className="hover:cursor-pointer"
+                          color="#000000"
+                          sx={{
+                            fontSize: "40px",
+                            color: "#fff",
+                            backgroundColor: "#CF1429",
+                            borderRadius: "10px",
+                            margin: "5px",
+                            padding: "3px",
+                            "&:hover": {
+                              opacity: 0.6,
+                            },
+                          }}
+                          onClick={(event) => deleteRecord(record)}
+                        />
+                      </button>
                     </td>
                   </tr>
                 );

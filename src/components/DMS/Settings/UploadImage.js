@@ -1,50 +1,77 @@
+import FileBase from "react-file-base64";
+import Swal from "sweetalert2";
+import api from "../../../api/index";
+import { useEffect } from "react";
+
 function UploadImage({
   signatureTitle,
   signatureRole,
-  setSignatureRole,
+  signaturePhoto,
+  setSignaturePhoto,
   inputID,
 }) {
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const signatureDetails = {
+      signaturePhoto,
+      signatureRole,
+    };
+    try {
+      const response = await api.post("/form/signature", signatureDetails);
+      if (response.status === 201) {
+        Swal.fire("Signature has been saved", "", "success");
+      } else {
+        Swal.fire("Something went wrong", "", "error");
+      }
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    async function getSignature() {
+      const response = await api.get(`/form/signature/${signatureRole}`);
+
+      setSignaturePhoto(response.data.signaturePhoto);
+    }
+
+    getSignature();
+  }, []);
+
   return (
-    <div className="text-center mb-5">
-      <div className="flex items-center justify-center flex-col">
-        <div className="text-left font-bold px-5 pb-1">{signatureTitle}</div>
-        <div className="relative w-[90%] h-[15rem]">
-          <label
-            htmlFor={inputID}
-            className="hover:opacity-60 hover:cursor-pointer transition-all duration-300 relative group border flex w-[100%] h-[100%] items-center justify-center"
-          >
-            <img
-              alt="Upload"
-              className="w-3/5 mx-auto block"
-              src={
-                signatureRole
-                  ? URL.createObjectURL(signatureRole)
-                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl7uBtezW2vkX89SVAORNkfbuZTaZQM_u2cg&usqp=CAU"
-              }
-            />
-
-            <div className="absolute font-bold text-[2rem] opacity-0 group-hover:opacity-100  transition-all duration-200 underline">
-              {signatureRole ? "Change File" : "Upload File"}
-            </div>
-          </label>
-          <div
-            className="absolute top-1 right-2 font-bold text-[1rem] transition-all duration-200 opacity-70 cursor-pointer"
-            onClick={() => setSignatureRole(null)}
-          >
-            {signatureRole && "Remove"}
-          </div>
+    <div className="flex items-center justify-center flex-col">
+      <form
+        className="w-[90%] bg-white rounded-lg border-2 border-white p-[20px] text-center "
+        onSubmit={handleSubmit}
+      >
+        <p className="text-left text-sm mb-1">[{signatureTitle}]</p>
+        <div className="flex flex-col justify-center items-center bg-[#e1e1e1] p-6 rounded-tl-2xl rounded-tr-2xl border-2 border-black">
+          <img src={signaturePhoto} alt="Signature" className="w-full h-full" />
         </div>
-
-        <input
-          id={inputID}
-          type="file"
-          name="myImage"
-          className="hidden"
-          onChange={(event) => {
-            setSignatureRole(event.target.files[0]);
-          }}
-        />
-      </div>
+        <div className="bg-white border-l border-l-black border-r border-r-black border-b border-b-black rounded-bl-2xl rounded-br-2xl p-4 w-full flex justify-center items-center">
+          <FileBase
+            type="file"
+            multiple={false}
+            onDone={({ base64 }) => {
+              setSignaturePhoto(base64);
+              console.log(signaturePhoto);
+            }}
+          />
+        </div>
+        <div className="flex justify-end mr-2">
+          <button
+            type="button"
+            className=" text-[#ff0000] font-semibold hover:opacity-70 mt-4 mr-4"
+            onClick={(e) => setSignaturePhoto("")}
+          >
+            Remove
+          </button>
+          <button
+            type="submit"
+            className=" text-white font-semibold px-4 py-2 mt-4 hover:opacity-70 rounded-lg bg-[#033AA9]"
+          >
+            Save
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
