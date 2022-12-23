@@ -1,21 +1,30 @@
+//MUI ICONS
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import LibraryAddCheckIcon from "@mui/icons-material/LibraryAddCheck";
 
+//REACT AND NPM PACKAGES
 import { useEffect, useState, useRef } from "react";
-import api from "../../api/index";
 import Swal from "sweetalert2";
+
+//INTERNAL MODULES
+import api from "../../api/index";
 import SwalLoading from "../../components/DMS/SwalLoading";
+import SwalHTML from "../../components/DMS/SwalHTML";
 
-function Claiming(props) {
-  const [requests, setRequests] = useState(null);
-  const [requestNumber, setRequestNumber] = useState(null);
-
+function Claiming() {
+  //SWAL
   const { startLoading, stopLoading } = SwalLoading();
+  const { requestInfo, recordInfo } = SwalHTML();
 
+  //REFS
   const inputsRef = useRef([]);
 
+  //VARIABLES
+  const [requests, setRequests] = useState(null);
+  const [requestNumber, setRequestNumber] = useState(null);
   const [multipleIds, setMultipleIds] = useState([]);
 
+  //FETCHING REQUESTS
   useEffect(() => {
     async function getRequests() {
       const response = await api.get("/form/processed");
@@ -30,48 +39,11 @@ function Claiming(props) {
   function getInfo(request) {
     Swal.fire({
       html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
-            <div class="text-left">
-            <strong>Request ID:</strong> ${request._id} <br/>
-              <strong>Request Date:</strong> ${request.requestDate} <br/>
-              <strong>Processed Date:</strong> ${request.processedDate} <br/>
-              <strong>Document:</strong> ${request.document} <br/>
-              <strong>Purpose:</strong> ${request.purpose} <br/>
-              <strong>Specify:</strong> ${request.specify} <br/> <br/> 
-            </div>
-           
+              ${requestInfo(request.recordID)}
               <hr>
               <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
-            <div  class="text-left">
-            <strong>Record ID:</strong> ${request.recordID._id} <br/>
-              <strong>Fullname:</strong> ${
-                request.recordID.firstName +
-                " " +
-                request.recordID.middleName +
-                " " +
-                request.recordID.lastName
-              } <br/>
-              <strong>Status:</strong> ${request.recordID.recordStatus} <br/>
-              <strong>Address:</strong> ${request.recordID.address} <br/>
-              <strong>Phone:</strong> ${request.recordID.phone} <br/>
-              <strong>Email:</strong> ${request.recordID.email} <br/>
-              <strong>Birth Date:</strong> ${request.recordID.bdate} <br/>
-              <strong>Person To Notify:</strong> ${
-                request.recordID.person2Notif
-              } <br/>
-              <strong>Relationship:</strong> ${
-                request.recordID.relationship
-              } <br/>
-              <strong>Person To Notify (Number):</strong> ${
-                request.recordID.person2NotifPhone
-              } <br/>
-              <strong>Gender:</strong> ${request.recordID.gender} <br/>
-              <strong>School Attainment:</strong> ${
-                request.recordID.schoolAttainment
-              } <br/>
-              <strong>Years of Residency:</strong> ${
-                request.recordID.yearsOfResidency
-              } <br/>
-             </div>`,
+              ${recordInfo(request.recordID)}
+            `,
     });
   }
 
@@ -86,6 +58,7 @@ function Claiming(props) {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         const response = await api.patch(`/form/claimed/${request._id}`);
 
         if (response.status === 200) {
@@ -143,6 +116,7 @@ function Claiming(props) {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         let response;
         for (let i = 0; i < multipleIds.length; i++) {
           response = await api.patch(`/form/claimed/${multipleIds[i]}`);

@@ -1,3 +1,4 @@
+//MUI ICONS
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
@@ -5,45 +6,51 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+//REACT AND NPM PACKAGES
 import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
 import ReactToPrint from "react-to-print";
 
+//INTERNAL MODULES
 import api from "../../api/index";
 import SwalLoading from "../../components/DMS/SwalLoading";
+import SwalHTML from "../../components/DMS/SwalHTML";
 import CertificateTemplate from "../../components/DMS/CertificateTemplate";
 import IdTemplate from "../../components/DMS/IdTemplate";
 
 function Requests() {
+  //SWAL
+  const { startLoading, stopLoading } = SwalLoading();
+  const { requestInfo, recordInfo } = SwalHTML();
+
+  //REFS
+  const componentsRef = useRef([]);
+  const inputsRef = useRef([]);
+
+  //VARIABLES
   const [requests, setRequests] = useState(null);
   const [requestNumber, setRequestNumber] = useState(null);
   const [requestNumberVerified, setRequestNumberVerified] = useState(null);
   const [requestNumberPending, setRequestNumberPending] = useState(null);
-  const [isStatusOpen, setIsStatusOpen] = useState(false);
   const [userStatusFilter, setUserStatusFilter] = useState("Verified");
-
-  const { startLoading, stopLoading } = SwalLoading();
-
-  const componentsRef = useRef([]);
-  const inputsRef = useRef([]);
-
   const [multipleIds, setMultipleIds] = useState([]);
 
+  //FETCHING REQUESTS
   useEffect(() => {
     async function getRequests() {
       setRequests(null);
       setMultipleIds([]);
       const response = await api.get("/form/requests");
 
-      var result = response.data.filter(function (object, index) {
+      var result = response.data.filter(function (object) {
         return object.recordID.recordStatus === userStatusFilter;
       });
 
-      var verifiedResult = response.data.filter(function (object, index) {
+      var verifiedResult = response.data.filter(function (object) {
         return object.recordID.recordStatus === "Verified";
       });
 
-      var pendingResult = response.data.filter(function (object, index) {
+      var pendingResult = response.data.filter(function (object) {
         return object.recordID.recordStatus === "Pending";
       });
 
@@ -58,104 +65,14 @@ function Requests() {
   }, [requestNumber, userStatusFilter]);
 
   function getInfo(request) {
-    if (request.recordID.recordStatus === "Pending") {
-      Swal.fire({
-        html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
-              <div class="text-left">
-                <strong>Request ID:</strong> ${request._id} <br/>
-                <strong>Request Date:</strong> ${request.requestDate} <br/>
-                <strong>Document:</strong> ${request.document} <br/>
-                <strong>Purpose:</strong> ${request.purpose} <br/>
-                <strong>Specify:</strong> ${request.specify} <br/> <br/> 
-              </div>
-             
-                <hr>
-                <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
-              <div  class="text-left">
-              <strong>Record ID:</strong> ${request.recordID._id} <br/>
-                <strong>Fullname:</strong> ${
-                  request.recordID.firstName +
-                  " " +
-                  request.recordID.middleName +
-                  " " +
-                  request.recordID.lastName
-                } <br/>
-                <strong>Status:</strong> ${request.recordID.recordStatus} <br/>
-                <strong>Address:</strong> ${request.recordID.address} <br/>
-                <strong>Phone:</strong> ${request.recordID.phone} <br/>
-                <strong>Email:</strong> ${request.recordID.email} <br/>
-                <strong>Birth Date:</strong> ${request.recordID.bdate} <br/>
-                <strong>Person To Notify:</strong> ${
-                  request.recordID.person2Notif
-                } <br/>
-                <strong>Relationship:</strong> ${
-                  request.recordID.relationship
-                } <br/>
-                <strong>Person To Notify (Number):</strong> ${
-                  request.recordID.person2NotifPhone
-                } <br/>
-                <strong>Gender:</strong> ${request.recordID.gender} <br/>
-                <strong>School Attainment:</strong> ${
-                  request.recordID.schoolAttainment
-                } <br/>
-                <strong>Years of Residency:</strong> ${
-                  request.recordID.yearsOfResidency
-                } <br/>
-                <strong>Proof:</strong>
-                <img src=${
-                  request.recordID.proofFront
-                } alt="no-proof-found" /> <br/>
-                <img src=${
-                  request.recordID.proofBack
-                } alt="no-back-page-found" /> <br/>
-               </div>`,
-      });
-    } else {
-      Swal.fire({
-        html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
-              <div class="text-left">
-                <strong>Request ID:</strong> ${request._id} <br/>
-                <strong>Request Date:</strong> ${request.requestDate} <br/>
-                <strong>Document:</strong> ${request.document} <br/>
-                <strong>Purpose:</strong> ${request.purpose} <br/>
-                <strong>Specify:</strong> ${request.specify} <br/> <br/> 
-              </div>
-             
-                <hr>
-                <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
-              <div  class="text-left">
-              <strong>Record ID:</strong> ${request.recordID._id} <br/>
-                <strong>Fullname:</strong> ${
-                  request.recordID.firstName +
-                  " " +
-                  request.recordID.middleName +
-                  " " +
-                  request.recordID.lastName
-                } <br/>
-                <strong>Status:</strong> ${request.recordID.recordStatus} <br/>
-                <strong>Address:</strong> ${request.recordID.address} <br/>
-                <strong>Phone:</strong> ${request.recordID.phone} <br/>
-                <strong>Email:</strong> ${request.recordID.email} <br/>
-                <strong>Birth Date:</strong> ${request.recordID.bdate} <br/>
-                <strong>Person To Notify:</strong> ${
-                  request.recordID.person2Notif
-                } <br/>
-                <strong>Relationship:</strong> ${
-                  request.recordID.relationship
-                } <br/>
-                <strong>Person To Notify (Number):</strong> ${
-                  request.recordID.person2NotifPhone
-                } <br/>
-                <strong>Gender:</strong> ${request.recordID.gender} <br/>
-                <strong>School Attainment:</strong> ${
-                  request.recordID.schoolAttainment
-                } <br/>
-                <strong>Years of Residency:</strong> ${
-                  request.recordID.yearsOfResidency
-                } <br/>
-               </div>`,
-      });
-    }
+    Swal.fire({
+      html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
+              ${requestInfo(request.recordID)}
+              <hr>
+              <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
+              ${recordInfo(request.recordID)}
+            `,
+    });
   }
 
   function processRequest(request) {
@@ -169,6 +86,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         const response = await api.patch(`/form/${request._id}`);
 
         if (response.status === 200) {
@@ -204,6 +122,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         const response = await api.patch(
           `/form/record-status/${request.recordID._id}`
         );
@@ -240,6 +159,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         const response = await api.patch(`/form/reject/${request._id}`);
 
         if (response.status === 200) {
@@ -274,6 +194,7 @@ function Requests() {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
     }).then(async (result) => {
+      startLoading();
       if (result.isConfirmed) {
         const response = await api.patch(`/form/archive/${request._id}`);
 
@@ -332,6 +253,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         let response;
         for (let i = 0; i < multipleIds.length; i++) {
           response = await api.patch(`/form/${multipleIds[i]}`);
@@ -366,6 +288,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         let response;
         for (let i = 0; i < multipleIds.length; i++) {
           response = await api.patch(`/form/reject/${multipleIds[i]}`);
@@ -400,6 +323,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         let response2;
         for (let i = 0; i < multipleIds.length; i++) {
           const response = await api.get(`/form/form/${multipleIds[i]}`);
@@ -438,6 +362,7 @@ function Requests() {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        startLoading();
         let response;
         for (let i = 0; i < multipleIds.length; i++) {
           response = await api.patch(`/form/archive/${multipleIds[i]}`);
@@ -523,12 +448,7 @@ function Requests() {
               <td className="invisible absolute | md:visible md:static">
                 Document
               </td>
-              <td
-                className="relative hover:cursor-pointer "
-                onClick={() => setIsStatusOpen(!isStatusOpen)}
-              >
-                Record Status
-              </td>
+              <td className="relative hover:cursor-pointer ">Record Status</td>
               <td>Action</td>
             </tr>
           </thead>

@@ -1,24 +1,33 @@
+//MUI ICONS
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 
+//REACT AND NPM PACKAGES
 import { useEffect, useState } from "react";
-import api from "../../api/index";
 import Swal from "sweetalert2";
+
+//INTERNAL MODULES
+import api from "../../api/index";
 import SwalLoading from "../../components/DMS/SwalLoading";
+import SwalHTML from "../../components/DMS/SwalHTML";
 
 function Logs() {
+  //SWAL
+  const { startLoading, stopLoading } = SwalLoading();
+  const { requestInfo, recordInfo } = SwalHTML();
+
+  //VARIABLES
   const [requests, setRequests] = useState([]);
   const [requestsEmpty, setRequestsEmpty] = useState(false);
   const [filteredRequests, setFilteredRequests] = useState(requests);
   const [searchField, setSearchField] = useState("");
   const [statusFilter, setStatusFilter] = useState("Claimed");
-  const [isStatusOpen, setIsStatusOpen] = useState(false);
 
-  const { startLoading, stopLoading } = SwalLoading();
-
+  //FETCHING REQUESTS
   useEffect(() => {
     async function getRequests() {
+      setRequests([]);
+      setFilteredRequests([]);
       const response = await api.get(`/form/logs/${statusFilter}`);
 
       if (response.data.length === 0) {
@@ -35,49 +44,11 @@ function Logs() {
   function getInfo(request) {
     Swal.fire({
       html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
-            <div class="text-left">
-            <strong>Request ID:</strong> ${request._id} <br/>
-              <strong>Request Date:</strong> ${request.requestDate} <br/>
-              <strong>Processed Date:</strong> ${request.processedDate} <br/>
-              <strong>Claimed Date:</strong> ${request.claimedDate} <br/>
-              <strong>Document:</strong> ${request.document} <br/>
-              <strong>Purpose:</strong> ${request.purpose} <br/>
-              <strong>Specify:</strong> ${request.specify} <br/> <br/> 
-            </div>
-           
+              ${requestInfo(request.recordID)}
               <hr>
               <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
-            <div  class="text-left">
-            <strong>Record ID:</strong> ${request.recordID._id} <br/>
-              <strong>Fullname:</strong> ${
-                request.recordID.firstName +
-                " " +
-                request.recordID.middleName +
-                " " +
-                request.recordID.lastName
-              } <br/>
-              <strong>Status:</strong> ${request.recordID.recordStatus} <br/>
-              <strong>Address:</strong> ${request.recordID.address} <br/>
-              <strong>Phone:</strong> ${request.recordID.phone} <br/>
-              <strong>Email:</strong> ${request.recordID.email} <br/>
-              <strong>Birth Date:</strong> ${request.recordID.bdate} <br/>
-              <strong>Person To Notify:</strong> ${
-                request.recordID.person2Notif
-              } <br/>
-              <strong>Relationship:</strong> ${
-                request.recordID.relationship
-              } <br/>
-              <strong>Person To Notify (Number):</strong> ${
-                request.recordID.person2NotifPhone
-              } <br/>
-              <strong>Gender:</strong> ${request.recordID.gender} <br/>
-              <strong>School Attainment:</strong> ${
-                request.recordID.schoolAttainment
-              } <br/>
-              <strong>Years of Residency:</strong> ${
-                request.recordID.yearsOfResidency
-              } <br/>
-             </div>`,
+              ${recordInfo(request.recordID)}
+            `,
     });
   }
 
@@ -123,55 +94,48 @@ function Logs() {
       </div>
 
       <div className="p-4 text-sm | lg:text-lg">
-        <table className="text-center shadow-lg rounded-2xl mx-auto bg-white overflow-hidden w-full | md:w-full transition-all duration-300">
+        <div className="flex flex-row">
+          <button
+            className={`py-2 px-12 rounded-t-2xl hover:opacity-80 text-white  ${
+              statusFilter === "Claimed" ? "bg-[#0D0F33]" : "bg-[#0D0F33af]"
+            }  `}
+            onClick={(e) => setStatusFilter("Claimed")}
+          >
+            Claimed
+          </button>
+          <button
+            className={`py-2 px-12 rounded-t-2xl text-white bg-dark-blue hover:opacity-80 ${
+              statusFilter === "Rejected" ? "bg-[#0D0F33]" : "bg-[#0D0F33af]"
+            }`}
+            onClick={(e) => setStatusFilter("Rejected")}
+          >
+            Rejected
+          </button>
+          <button
+            className={`py-2 px-12 rounded-t-2xl text-white bg-dark-blue hover:opacity-80 ${
+              statusFilter === "Archive" ? "bg-[#0D0F33]" : "bg-[#0D0F33af]"
+            }`}
+            onClick={(e) => setStatusFilter("Archive")}
+          >
+            Archive
+          </button>
+        </div>
+        <table className="text-center shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden w-full | md:w-full transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
-              <td className="p-4">Claimed Date</td>
+              {statusFilter !== "Archive" && (
+                <td className="p-4">
+                  {statusFilter === "Claimed" && "Claimed Date"}
+                  {statusFilter === "Rejected" && "Rejected Date"}
+                </td>
+              )}
+
               <td className="p-4">Name</td>
               <td>Document</td>
               <td className="invisible absolute | md:visible md:static">
                 Purpose
               </td>
-              <td
-                className="relative hover:cursor-pointer "
-                onClick={() => setIsStatusOpen(!isStatusOpen)}
-              >
-                Status <ArrowDropDownOutlinedIcon />
-                {isStatusOpen && (
-                  <ul className="absolute bg-[#ffffffef] w-[14rem] right-6 text-lg z-10 shadow-lg">
-                    <li
-                      className="hover:bg-slate-300 hover:cursor-pointer p-2 font-semibold text-black "
-                      onClick={(e) => {
-                        setStatusFilter("Claimed");
-                        setRequests([]);
-                        setFilteredRequests([]);
-                      }}
-                    >
-                      Claimed
-                    </li>
-                    <li
-                      className="hover:bg-slate-300 hover:cursor-pointer p-2 font-semibold text-black"
-                      onClick={(e) => {
-                        setStatusFilter("Archive");
-                        setRequests([]);
-                        setFilteredRequests([]);
-                      }}
-                    >
-                      Archive
-                    </li>
-                    <li
-                      className="hover:bg-slate-300 hover:cursor-pointer p-2 font-semibold text-black"
-                      onClick={(e) => {
-                        setStatusFilter("Rejected");
-                        setRequests([]);
-                        setFilteredRequests([]);
-                      }}
-                    >
-                      Rejected
-                    </li>
-                  </ul>
-                )}
-              </td>
+              <td className="relative hover:cursor-pointer ">Status</td>
               <td width="10%">Action</td>
             </tr>
           </thead>
@@ -181,7 +145,7 @@ function Logs() {
             {(filteredRequests.length !== 0 || requestsEmpty) && stopLoading()}
             {requestsEmpty && (
               <tr>
-                <td className="align-middle p-2 py-16" colSpan={8}>
+                <td className="align-middle p-2 py-8" colSpan={8}>
                   NO LOGS FOUND!
                 </td>
               </tr>
@@ -193,7 +157,13 @@ function Logs() {
                     key={request._id}
                     className="border-b border-gray bg-white text-black"
                   >
-                    <td className="p-2 py-5">{request.claimedDate}</td>
+                    {statusFilter !== "Archive" && (
+                      <td className="p-2 py-5">
+                        {request.claimedDate && request.claimedDate}
+                        {request.rejectedDate && request.rejectedDate}
+                      </td>
+                    )}
+
                     <td className="p-2 py-5">
                       {request.recordID.firstName +
                         " " +

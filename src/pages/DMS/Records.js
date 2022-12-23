@@ -1,30 +1,36 @@
+//MUI ICONS
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
+//REACT AND NPM PACKAGES
 import { useEffect, useState } from "react";
-import api from "../../api/index";
 import Swal from "sweetalert2";
+
+//INTERNAL MODULES
+import api from "../../api/index";
 import SwalLoading from "../../components/DMS/SwalLoading";
+import SwalHTML from "../../components/DMS/SwalHTML";
 
 function Records() {
+  //SWAL
+  const { startLoading, stopLoading } = SwalLoading();
+  const { recordInfo } = SwalHTML();
+
+  //VARIABLES
   const [records, setRecords] = useState([]);
   const [recordsEmpty, setRecordsEmpty] = useState(false);
   const [filteredRecords, setFilteredRecords] = useState(records);
   const [searchField, setSearchField] = useState("");
   const [sortBy, setSortBy] = useState(1);
-  const [sortCategory, setSortCategory] = useState("lastName");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [userNumber, setUserNumber] = useState(null);
 
-  const { startLoading, stopLoading } = SwalLoading();
-
+  //FETCHING RECORDS
   useEffect(() => {
     async function getRequests() {
-      const response = await api.get(`/form/records/${sortCategory}/${sortBy}`);
+      const response = await api.get(`/form/records/${sortBy}`);
 
       if (response.data.length === 0) {
         setRecordsEmpty(true);
@@ -37,73 +43,14 @@ function Records() {
     }
 
     getRequests();
-  }, [sortBy, sortCategory, userNumber]);
+  }, [sortBy, userNumber]);
 
   function getInfo(record) {
-    if (record.recordStatus === "Pending") {
-      Swal.fire({
-        html: `<h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
-               <div class="text-left">
-                <strong>Record ID:</strong> ${record._id} <br/>
-                <strong>Fullname:</strong> ${
-                  record.firstName +
-                  " " +
-                  record.middleName +
-                  " " +
-                  record.lastName
-                } <br/>
-                <strong>Status:</strong> ${record.recordStatus} <br/>
-                <strong>Address:</strong> ${record.address} <br/>
-                <strong>Phone:</strong> ${record.phone} <br/>
-                <strong>Email:</strong> ${record.email} <br/>
-                <strong>Birth Date:</strong> ${record.bdate} <br/>
-                <strong>Person To Notify:</strong> ${record.person2Notif} <br/>
-                <strong>Relationship:</strong> ${record.relationship} <br/>
-                <strong>Person To Notify (Number):</strong> ${
-                  record.person2NotifPhone
-                } <br/>
-                <strong>Gender:</strong> ${record.gender} <br/>
-                <strong>School Attainment:</strong> ${
-                  record.schoolAttainment
-                } <br/>
-                <strong>Years of Residency:</strong> ${
-                  record.yearsOfResidency
-                } <br/>
-                <strong>Proof:</strong>
-                <img src=${record.proofFront} alt="no-proof-found" /> <br/>
-                <img src=${record.proofBack} alt="no-back-page-found" /> <br/>
-              </div>`,
-      });
-    } else {
-      Swal.fire({
-        html: `<h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
-               <div class="text-left">
-                <strong>Record ID:</strong> ${record._id} <br/>
-                <strong>Fullname:</strong> ${
-                  record.firstName +
-                  " " +
-                  record.middleName +
-                  " " +
-                  record.lastName
-                } <br/>
-                <strong>Status:</strong> ${record.recordStatus} <br/>
-                <strong>Address:</strong> ${record.address} <br/>
-                <strong>Phone:</strong> ${record.phone} <br/>
-                <strong>Email:</strong> ${record.email} <br/>
-                <strong>Birth Date:</strong> ${record.bdate} <br/>
-                <strong>Person To Notify:</strong> ${record.person2Notif} <br/>
-                <strong>Relationship:</strong> ${record.relationship} <br/>
-                <strong>Person To Notify (Number):</strong> ${
-                  record.person2NotifPhone
-                } <br/>
-                <strong>Gender:</strong> ${record.gender} <br/>
-                <strong>School Attainment:</strong> ${
-                  record.schoolAttainment
-                } <br/>
-                <strong>Years of Residency:</strong> ${record.yearsOfResidency}
-              </div>`,
-      });
-    }
+    Swal.fire({
+      html: `<h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
+              ${recordInfo(record)}
+            `,
+    });
   }
 
   function deleteRecord(record) {
@@ -120,6 +67,7 @@ function Records() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          startLoading();
           const response = await api.delete(`/form/records/${record._id}`);
 
           if (response.status === 200) {
@@ -189,7 +137,6 @@ function Records() {
                     className="hover:bg-slate-300 p-2 font-semibold"
                     onClick={() => {
                       setSortBy(1);
-                      setSortCategory("lastName");
                     }}
                   >
                     Last Name (A-Z)
@@ -198,30 +145,9 @@ function Records() {
                     className="hover:bg-slate-300 p-2 font-semibold"
                     onClick={() => {
                       setSortBy(-1);
-                      setSortCategory("lastName");
                     }}
                   >
                     Last Name (Z-A)
-                  </li>
-                  <li
-                    className="hover:bg-slate-300 p-2 font-semibold"
-                    onClick={() => {
-                      setSortBy(1);
-                      setSortCategory("age");
-                    }}
-                  >
-                    Age
-                    <ArrowUpwardIcon />
-                  </li>
-                  <li
-                    className="hover:bg-slate-300 p-2 font-semibold"
-                    onClick={() => {
-                      setSortBy(-1);
-                      setSortCategory("age");
-                    }}
-                  >
-                    Age
-                    <ArrowDownwardIcon />
                   </li>
                 </ul>
               )}
@@ -264,7 +190,7 @@ function Records() {
                 return (
                   <tr
                     key={record._id}
-                    className="border-b border-gray bg-white text-black"
+                    className="border-b border-gray bg-white text-black "
                   >
                     <td className="p-2 py-5">
                       {record.lastName +

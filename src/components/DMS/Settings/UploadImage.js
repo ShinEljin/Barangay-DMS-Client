@@ -8,7 +8,6 @@ function UploadImage({
   signatureRole,
   signaturePhoto,
   setSignaturePhoto,
-  inputID,
 }) {
   async function handleSubmit(e) {
     e.preventDefault();
@@ -34,6 +33,8 @@ function UploadImage({
     }
 
     getSignature();
+
+    // eslint-disable-next-line
   }, []);
 
   return (
