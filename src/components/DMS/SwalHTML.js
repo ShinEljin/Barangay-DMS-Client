@@ -20,7 +20,13 @@ function SwalHTML() {
    }
    <strong>Document:</strong> ${request.document} <br/>
    <strong>Purpose:</strong> ${request.purpose} <br/>
-   <strong>Specify:</strong> ${request.specify} <br/> <br/> 
+   ${
+     request.specify !== ""
+       ? `<strong>Specify:</strong> ${request.specify} <br/>`
+       : ""
+   }
+ 
+    <br/> 
   </div>`;
   }
 

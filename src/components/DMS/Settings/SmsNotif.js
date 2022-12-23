@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import api from "../../../api/index";
 
 function SmsNotif({ smsNotifOpen, setSmsNotifOpen }) {
-  const [checked, setChecked] = useState(null);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     async function getSmsConfig() {

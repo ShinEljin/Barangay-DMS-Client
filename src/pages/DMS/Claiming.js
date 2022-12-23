@@ -39,7 +39,7 @@ function Claiming() {
   function getInfo(request) {
     Swal.fire({
       html: `<h1 class="font-bold text-[1.3rem]" >REQUEST DETAILS</h1> 
-              ${requestInfo(request.recordID)}
+              ${requestInfo(request)}
               <hr>
               <h1 class="font-bold text-[1.3rem]" >RECORD DETAILS</h1> 
               ${recordInfo(request.recordID)}
