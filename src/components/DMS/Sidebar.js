@@ -46,7 +46,7 @@ function Sidebar({ setTab, tab }) {
   return (
     <React.Fragment>
       <input type="checkbox" id="navbar-toggle" className="hidden absolute" />
-      <div className="opacity-0 invisible absolute bg-navbar-bg bg-cover bg-center text-white | md:bg-auto md:bg-left-top md:opacity-100 md:visible md:bg-navbar-bg md:h-screen md:w-[70px] md:fixed | xl:opacity-100 xl:visible xl:bg-navbar-bg xl:h-screen xl:w-[330px] xl:fixed">
+      <div className="opacity-0 invisible absolute bg-navbar-bg bg-cover bg-center text-white | md:bg-cover md:opacity-100 md:visible md:h-screen md:w-[70px] md:fixed | xl:opacity-100 xl:visible xl:h-screen xl:w-[330px] xl:fixed | 2xl:bg-auto">
         <div className="flex | md:p-6 md:pb-[3.5rem] | xl:p-6 ease-linear">
           <img
             alt="Barangay Seal"
@@ -150,6 +150,7 @@ function Sidebar({ setTab, tab }) {
               />
             </Link>
             <SidebarListItem
+              className={"mb-6 | 2xl:mb-0"}
               item="Sign Out"
               icon=<LogoutOutlinedIcon sx={{ fontSize: 40 }} />
               onClick={Logout}

@@ -96,25 +96,25 @@ function Logs() {
       <div className="p-4 text-sm | lg:text-lg">
         <div className="flex flex-row">
           <button
-            className={`py-2 px-12 rounded-t-2xl hover:opacity-80 text-white  ${
+            className={`py-2 px-6 rounded-t-2xl hover:opacity-80 text-white   ${
               statusFilter === "Claimed" ? "bg-[#0D0F33]" : "bg-[#0D0F33af]"
-            }  `}
+            } | md:px-12 `}
             onClick={(e) => setStatusFilter("Claimed")}
           >
             Claimed
           </button>
           <button
-            className={`py-2 px-12 rounded-t-2xl text-white bg-dark-blue hover:opacity-80 ${
+            className={`py-2 px-6 rounded-t-2xl text-white bg-dark-blue hover:opacity-80 ${
               statusFilter === "Rejected" ? "bg-[#0D0F33]" : "bg-[#0D0F33af]"
-            }`}
+            } | md:px-12`}
             onClick={(e) => setStatusFilter("Rejected")}
           >
             Rejected
           </button>
           <button
-            className={`py-2 px-12 rounded-t-2xl text-white bg-dark-blue hover:opacity-80 ${
+            className={`py-2 px-6 rounded-t-2xl text-white bg-dark-blue hover:opacity-80 ${
               statusFilter === "Archive" ? "bg-[#0D0F33]" : "bg-[#0D0F33af]"
-            }`}
+            } | md:px-12`}
             onClick={(e) => setStatusFilter("Archive")}
           >
             Archive
@@ -135,7 +135,9 @@ function Logs() {
               <td className="invisible absolute | md:visible md:static">
                 Purpose
               </td>
-              <td className="relative hover:cursor-pointer ">Status</td>
+              <td className="invisible absolute | md:visible md:static">
+                Status
+              </td>
               <td width="10%">Action</td>
             </tr>
           </thead>

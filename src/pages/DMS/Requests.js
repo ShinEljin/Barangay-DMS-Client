@@ -439,7 +439,7 @@ function Requests() {
             )}
           </div>
         </div>
-        <table className="text-center shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden | md:w-full transition-all duration-300">
+        <table className="text-center shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden w-full | transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
               <td></td>
