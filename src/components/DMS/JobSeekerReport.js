@@ -1,5 +1,6 @@
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import SquareIcon from "@mui/icons-material/Square";
+import { useState } from "react";
 import {
   PieChart,
   Pie,
@@ -11,7 +12,24 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function JobSeekerReport({ title, ageGenderData, educData, noOfRequests }) {
+function JobSeekerReport({
+  title,
+  ageData,
+  genderData,
+  educData,
+  noOfRequests,
+  setMonth,
+  month,
+}) {
+  const [isMonthOpen, setIsMonthOpen] = useState(false);
+
+  function getMonthName(monthNumber) {
+    const date = new Date();
+    date.setMonth(monthNumber - 1);
+
+    return date.toLocaleString("en-US", { month: "long" });
+  }
+
   return (
     <div className="bg-white flex-col p-4 rounded-2xl col-span-3">
       <div className="flex flex-row justify-between">
@@ -19,42 +37,134 @@ function JobSeekerReport({ title, ageGenderData, educData, noOfRequests }) {
           Report
           <span className="text-sm text-slate-500 font-light"> ({title})</span>
         </h3>
-        <p>
-          This Month
-          <span>
-            <ArrowDropDownOutlinedIcon />
-          </span>
-        </p>
+        <div
+          className="hover:cursor-pointer relative"
+          onClick={() => setIsMonthOpen(!isMonthOpen)}
+        >
+          {getMonthName(month + 1)}
+          <ArrowDropDownOutlinedIcon />
+          {isMonthOpen && (
+            <div className="absolute bg-slate-300 top-6 right-2">
+              <li className="list-none">
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(0)}
+                >
+                  January
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(1)}
+                >
+                  February
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(2)}
+                >
+                  March
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(3)}
+                >
+                  April
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(4)}
+                >
+                  May
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(5)}
+                >
+                  June
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(6)}
+                >
+                  July
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(7)}
+                >
+                  August
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(8)}
+                >
+                  September
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(9)}
+                >
+                  October
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(10)}
+                >
+                  November
+                </ul>
+                <ul
+                  className="px-4 py-1 hover:bg-slate-200 text-lg"
+                  onClick={() => setMonth(11)}
+                >
+                  December
+                </ul>
+              </li>
+            </div>
+          )}
+        </div>
       </div>
+
       <div>
-        <h1 className="text-center font-bold text-xl mt-5">
+        <h1 className="text-center font-bold text-xl mt-6 mb-4">
           Number of Requests{" "}
           <span className="text-red-500">{noOfRequests}</span>
         </h1>
-        <h1 className="text-center font-bold text-xl mt-5">
-          Age & Gender Graph
-        </h1>
       </div>
+
       <div className="grid grid-cols-4">
         <div className="col-span-4 | md:col-span-3 relative z-0">
+          <h1 className="text-center font-bold text-xl mt-5">Age Graph</h1>
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart width={700} height={500} data={ageGenderData}>
-              <XAxis dataKey="name" />
-              <YAxis />
+            <BarChart data={ageData}>
+              <XAxis dataKey="age" />
+              <YAxis
+                label={{
+                  value: "No.Of Requests",
+                  angle: -90,
+                  position: "insideLeft",
+                }}
+              />
               <Tooltip />
-              <Bar dataKey="Male" stackId="a" fill="#033AA9" />
-              <Bar dataKey="Female" stackId="a" fill="#CF1429" />
+              <Bar dataKey="Requests" stackId="a" fill="#033AA9" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="flex flex-row justify-between ml-5 col-span-4  | md:col-span-1 md:flex-col">
-          <div className="w-[70%]">
-            <p className="text-center font-bold text-xl invisible absolute | md:visible md:static">
+        <div className="flex flex-row justify-between ml-12 col-span-4 | md:col-span-1 md:flex-col">
+          <div className="w-[100%]">
+            <p className="text-center font-bold text-xl invisible absolute mt-6 mb-4 | md:visible md:static">
               Gender
             </p>
-            <div className="w-[75%] bg-[#033AA9] text-white p-2">750</div>
-            <div className="w-[25%] bg-[#CF1429] text-white p-2 mt-1">250</div>
+            <div
+              className={`w-[${genderData.malePercent}%] bg-[#033AA9] text-white p-2`}
+            >
+              {genderData.male}
+            </div>
+            <div
+              className={`w-[${genderData.femalePercent}%] bg-[#CF1429] text-white p-2 mt-1`}
+            >
+              {genderData.female}
+            </div>
           </div>
           <div className="md:mb-7 flex flex-col justify-end">
             <p className="text-xs">
@@ -66,6 +176,7 @@ function JobSeekerReport({ title, ageGenderData, educData, noOfRequests }) {
           </div>
         </div>
       </div>
+
       <h1 className="text-center font-bold text-xl mt-5">
         Educational Attainment
       </h1>
@@ -80,7 +191,7 @@ function JobSeekerReport({ title, ageGenderData, educData, noOfRequests }) {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                innerRadius={70}
+                innerRadius={0}
                 label
               />
             </PieChart>
@@ -107,6 +218,7 @@ function JobSeekerReport({ title, ageGenderData, educData, noOfRequests }) {
           </p>
         </div>
       </div>
+
       <div className="inline-block float-right text-white font-bold px-4 py-2 rounded-lg bg-[#033AA9]">
         Download Report
       </div>

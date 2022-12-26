@@ -3,7 +3,7 @@ import { useState } from "react";
 import SettingsItem from "../../components/DMS/Settings/SettingsItem";
 import ChangePassword from "../../components/DMS/Settings/ChangePassword";
 import SmsNotif from "../../components/DMS/Settings/SmsNotif";
-import MastersList from "../../components/DMS/Settings/MastersList";
+// import MastersList from "../../components/DMS/Settings/MastersList";
 import Signature from "../../components/DMS/Settings/Signature";
 import Validation from "../../components/DMS/Settings/Validation";
 
@@ -11,7 +11,7 @@ function Settings() {
   const [changePassOpen, setChangePassOpen] = useState(false);
   const [smsNotifOpen, setSmsNotifOpen] = useState(false);
   const [validationOpen, setValidationOpen] = useState(false);
-  const [mastersListOpen, setMastersListOpen] = useState(false);
+  // const [mastersListOpen, setMastersListOpen] = useState(false);
   const [signatureOpen, setSignatureOpen] = useState(false);
 
   return (
@@ -60,7 +60,7 @@ function Settings() {
         )}
 
         {/* MASTERSLIST SETTING */}
-        {!mastersListOpen ? (
+        {/* {!mastersListOpen ? (
           <SettingsItem
             itemOpen={mastersListOpen}
             setItemOpen={setMastersListOpen}
@@ -71,7 +71,7 @@ function Settings() {
             mastersListOpen={mastersListOpen}
             setMastersListOpen={setMastersListOpen}
           />
-        )}
+        )} */}
 
         {/* SIGNATURE SETTING */}
         {!signatureOpen ? (

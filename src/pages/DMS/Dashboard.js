@@ -4,13 +4,9 @@ import ElderlyIcon from "@mui/icons-material/Elderly";
 
 import SquareIcon from "@mui/icons-material/Square";
 
-function Dashboard(props) {
+function Dashboard() {
   return (
     <div className="bg-light-gray">
-      <div className="text-center mt-4 text-xl font-bold | md:ml-[70px] md:text-2xl | lg:invisible lg:absolute">
-        Dashboard
-      </div>
-
       <div className="dashboard grid m-5 gap-5 grid-cols-1 | md:ml-[90px] md:grid-cols-2 | xl:ml-[350px] xl:grid-cols-3">
         <div className="bg-white flex-col px-10 py-2 rounded-2xl">
           <div className="flex">

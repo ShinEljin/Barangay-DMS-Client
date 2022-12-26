@@ -1,4 +1,3 @@
-import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import SquareIcon from "@mui/icons-material/Square";
 import { PieChart, Pie, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -7,12 +6,6 @@ function PieChartReport({ title, data, noOfRequests }) {
     <div className="bg-white flex-col p-4 rounded-2xl col-span-3 | xl:col-span-1">
       <div className="flex flex-row justify-between">
         <h3 className="font-bold text-xl mb-2">{title}</h3>
-        <p>
-          This Month
-          <span>
-            <ArrowDropDownOutlinedIcon />
-          </span>
-        </p>
       </div>
       <div>
         <h1 className="text-center font-bold text-xl mt-5">
@@ -22,8 +15,8 @@ function PieChartReport({ title, data, noOfRequests }) {
       </div>
       <div className="grid grid-cols-4">
         <div className="col-span-4 | md:col-span-3 relative z-0">
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart width={730} height={250}>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
               <Tooltip />
               <Pie
                 data={data}
@@ -31,7 +24,7 @@ function PieChartReport({ title, data, noOfRequests }) {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
+                innerRadius={0}
                 label
               />
             </PieChart>
@@ -45,7 +38,10 @@ function PieChartReport({ title, data, noOfRequests }) {
             <SquareIcon sx={{ color: "#CF1429" }} /> Unclaimed
           </p>
           <p className="text-xs">
-            <SquareIcon sx={{ color: "#EB756A" }} /> Others
+            <SquareIcon sx={{ color: "#EB756A" }} /> Rejected
+          </p>
+          <p className="text-xs">
+            <SquareIcon sx={{ color: "#FCBAB2" }} /> Others
           </p>
         </div>
       </div>

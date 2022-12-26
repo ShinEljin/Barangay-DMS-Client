@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
-import ClearIcon from "@mui/icons-material/Clear";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import api from "../../../api/index";
 import {
   isPasswordStrong,
@@ -63,11 +63,17 @@ function ChangePassword({ changePassOpen, setChangePassOpen }) {
 
   return (
     <div className="bg-white flex flex-col justify-center m-5 mt-0 rounded-xl max-w-sm relative">
-      <ClearIcon
-        className="absolute top-5 right-5 hover:cursor-pointer hover:opacity-60"
+      <KeyboardArrowDownIcon
+        fontSize="large"
+        className="absolute top-4 right-4 hover:cursor-pointer "
         onClick={() => setChangePassOpen(!changePassOpen)}
       />
-      <div className="text-center text-2xl font-bold py-4">Change Password</div>
+      <div
+        className="text-center text-2xl font-bold py-4 hover:bg-[#0D89C77f] hover:rounded-t-xl hover:cursor-pointer"
+        onClick={() => setChangePassOpen(!changePassOpen)}
+      >
+        Change Password
+      </div>
       <div className="text-center pb-4">
         <img
           alt="Lock"

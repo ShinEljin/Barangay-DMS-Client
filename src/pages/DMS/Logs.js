@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 //REACT AND NPM PACKAGES
 import { useEffect, useState } from "react";
+import json2csv from "json2csv";
 import Swal from "sweetalert2";
 
 //INTERNAL MODULES
@@ -52,6 +53,45 @@ function Logs() {
     });
   }
 
+  function convertJsonToCsv(jsonData) {
+    const fields = [
+      { label: "Request ID", value: "_id" },
+      {
+        label: "Record ID (search on records table/data)",
+        value: "recordID",
+      },
+      { label: "Request Date", value: "requestDate" },
+      { label: "Processed Date", value: "processedDate" },
+      { label: "Claimed Date", value: "claimedDate" },
+      { label: "Document", value: "document" },
+      { label: "Purpose", value: "purpose" },
+      { label: "Specify", value: "specify" },
+      { label: "Status", value: "status" },
+    ];
+    const opts = { fields };
+    try {
+      const csv = json2csv.parse(jsonData, opts);
+      return csv;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function downloadCsv(csv) {
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", statusFilter + " Logs.csv");
+    document.body.appendChild(link);
+    link.click();
+  }
+
+  const handleDownload = async () => {
+    const requests = await api.get("/form/logs/All");
+    const csv = convertJsonToCsv(requests.data);
+    downloadCsv(csv);
+  };
+
   useEffect(() => {
     const newFilteredRequests = requests.filter((request) => {
       return request.recordID.lastName
@@ -86,7 +126,10 @@ function Logs() {
           </div>
 
           <div className=" flex justify-center items-center flex-row">
-            <button className="bg-dark-blue text-white px-3 py-2 rounded-xl cursor-pointer mr-2 | text-sm | lg:text-base lg:px-5 lg:py-3 hover:opacity-70 ">
+            <button
+              className="bg-dark-blue text-white px-3 py-2 rounded-xl cursor-pointer mr-2 | text-sm | lg:text-base lg:px-5 lg:py-3 hover:opacity-70 "
+              onClick={handleDownload}
+            >
               Download Logs
             </button>
           </div>

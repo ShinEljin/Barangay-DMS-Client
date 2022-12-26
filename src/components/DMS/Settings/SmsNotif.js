@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ClearIcon from "@mui/icons-material/Clear";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Switch from "@mui/material/Switch";
 import Swal from "sweetalert2";
 import api from "../../../api/index";
@@ -56,11 +56,15 @@ function SmsNotif({ smsNotifOpen, setSmsNotifOpen }) {
 
   return (
     <div className="bg-white flex flex-col justify-center m-5 mt-0 rounded-xl max-w-sm relative">
-      <ClearIcon
-        className="absolute top-5 right-5 hover:cursor-pointer hover:opacity-60"
+      <KeyboardArrowDownIcon
+        fontSize="large"
+        className="absolute top-4 right-4 hover:cursor-pointer "
         onClick={() => setSmsNotifOpen(!smsNotifOpen)}
       />
-      <div className="text-center text-2xl font-bold py-4">
+      <div
+        className="text-center text-2xl font-bold py-4 hover:bg-[#0D89C77f] hover:rounded-t-xl hover:cursor-pointer"
+        onClick={() => setSmsNotifOpen(!smsNotifOpen)}
+      >
         SMS Notification
       </div>
       <div className="text-center pb-4">

@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 //REACT AND NPM PACKAGES
 import { useEffect, useState } from "react";
+import json2csv from "json2csv";
 import Swal from "sweetalert2";
 
 //INTERNAL MODULES
@@ -89,6 +90,47 @@ function Records() {
     });
   }
 
+  function convertJsonToCsv(jsonData) {
+    const fields = [
+      { label: "Record ID", value: "_id" },
+      { label: "Last Name", value: "lastName" },
+      { label: "First Name", value: "firstName" },
+      { label: "Middle Name", value: "middleName" },
+      { label: "Address", value: "address" },
+      { label: "Phone Number", value: "phone" },
+      { label: "Birth Date", value: "bdate" },
+      { label: "Email", value: "email" },
+      { label: "Record Status", value: "recordStatus" },
+      { label: "Person To Notify", value: "person2Notif" },
+      { label: "Relationship", value: "relationship" },
+      { label: "Person To Notify Phone Number", value: "person2NotifPhone" },
+      { label: "Gender", value: "gender" },
+      { label: "School Attaintment", value: "schoolAttainment" },
+      { label: "Years Of Residency", value: "yearsOfResidency" },
+    ];
+    const opts = { fields };
+    try {
+      const csv = json2csv.parse(jsonData, opts);
+      return csv;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function downloadCsv(csv) {
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "records.csv");
+    document.body.appendChild(link);
+    link.click();
+  }
+
+  const handleDownload = () => {
+    const csv = convertJsonToCsv(records);
+    downloadCsv(csv);
+  };
+
   useEffect(() => {
     const newFilteredRecords = records.filter((record) => {
       return record.lastName.toLocaleLowerCase().includes(searchField);
@@ -122,7 +164,10 @@ function Records() {
           </div>
 
           <div className=" flex justify-center items-center">
-            <button className="bg-dark-blue text-white px-3 py-2 rounded-xl cursor-pointer mr-2 | text-sm | lg:text-base lg:px-5 lg:py-3 hover:opacity-70 ">
+            <button
+              className="bg-dark-blue text-white px-3 py-2 rounded-xl cursor-pointer mr-2 | text-sm | lg:text-base lg:px-5 lg:py-3 hover:opacity-70 "
+              onClick={handleDownload}
+            >
               Download All Records
             </button>
             <button

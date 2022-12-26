@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ClearIcon from "@mui/icons-material/Clear";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import UploadImage from "./UploadImage";
 
 function Signature({ signatureOpen, setSignatureOpen }) {
@@ -10,11 +10,15 @@ function Signature({ signatureOpen, setSignatureOpen }) {
 
   return (
     <div className="bg-white flex flex-col justify-center m-5 mt-0 rounded-xl max-w-sm relative">
-      <ClearIcon
-        className="absolute top-5 right-5 hover:cursor-pointer opacity-30 hover:opacity-80"
+      <KeyboardArrowDownIcon
+        fontSize="large"
+        className="absolute top-4 right-4 hover:cursor-pointer "
         onClick={() => setSignatureOpen(!signatureOpen)}
       />
-      <div className="text-center text-2xl font-bold py-4">
+      <div
+        className="text-center text-2xl font-bold py-4 hover:bg-[#0D89C77f] hover:rounded-t-xl hover:cursor-pointer"
+        onClick={() => setSignatureOpen(!signatureOpen)}
+      >
         Upload Signature
       </div>
       <UploadImage
