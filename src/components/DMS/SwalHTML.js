@@ -68,17 +68,16 @@ function SwalHTML() {
           : ""
       }
  
- 
-    
- 
       ${
         record.recordStatus === "Pending"
-          ? `<strong>Proof:</strong>
-      <img src=${record.proofFront} alt="no-proof-found" /> <br/>
-      <img src=${record.proofBack} alt="no-back-page-found" /> <br/>`
+          ? `<strong>Proof:</strong> <br/>
+          <img src=${`https://barangaybucket.s3.ap-southeast-1.amazonaws.com/${record._id}-proof1`} alt="no-front-page-found" /> <br/>
+          <img src=${`https://barangaybucket.s3.ap-southeast-1.amazonaws.com/${record._id}-proof2`} alt="no-back-page-found" /> <br/>
+            `
           : ""
       }
- 
+      
+
      </div>`;
   }
   return { requestInfo, recordInfo };
