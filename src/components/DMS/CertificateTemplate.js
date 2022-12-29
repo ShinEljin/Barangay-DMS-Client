@@ -45,6 +45,7 @@ const CertificateTemplate = forwardRef((props, ref) => {
       );
 
       setChairmanSignaturePhoto(chairmanSigantureDetails.data.signaturePhoto);
+
       setSecretarySignaturePhoto(secretarySigantureDetails.data.signaturePhoto);
     }
 

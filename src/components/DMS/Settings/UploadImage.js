@@ -1,7 +1,6 @@
-import FileBase from "react-file-base64";
 import Swal from "sweetalert2";
 import api from "../../../api/index";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function UploadImage({
   signatureTitle,
@@ -9,12 +8,15 @@ function UploadImage({
   signaturePhoto,
   setSignaturePhoto,
 }) {
+  const [signatureURL, setSignatureURL] = useState(null);
+
   async function handleSubmit(e) {
     e.preventDefault();
-    const signatureDetails = {
-      signaturePhoto,
-      signatureRole,
-    };
+
+    const signatureDetails = new FormData();
+    signatureDetails.append("signaturePhoto", signaturePhoto);
+    signatureDetails.append("signatureRole", signatureRole);
+
     try {
       const response = await api.post("/form/signature", signatureDetails);
       if (response.status === 201) {
@@ -22,14 +24,16 @@ function UploadImage({
       } else {
         Swal.fire("Something went wrong", "", "error");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
     async function getSignature() {
       const response = await api.get(`/form/signature/${signatureRole}`);
 
-      setSignaturePhoto(response.data.signaturePhoto);
+      setSignatureURL(response.data.signaturePhoto);
     }
 
     getSignature();
@@ -45,15 +49,15 @@ function UploadImage({
       >
         <p className="text-left text-sm mb-1">[{signatureTitle}]</p>
         <div className="flex flex-col justify-center items-center bg-[#e1e1e1] p-6 rounded-tl-2xl rounded-tr-2xl border-2 border-black">
-          <img src={signaturePhoto} alt="Signature" className="w-full h-full" />
+          <img src={signatureURL} alt="Signature" className="w-full h-full" />
         </div>
         <div className="bg-white border-l border-l-black border-r border-r-black border-b border-b-black rounded-bl-2xl rounded-br-2xl p-4 w-full flex justify-center items-center">
-          <FileBase
+          <input
             type="file"
-            multiple={false}
-            onDone={({ base64 }) => {
-              setSignaturePhoto(base64);
-              console.log(signaturePhoto);
+            accept="image/*"
+            onChange={(e) => {
+              setSignaturePhoto(e.target.files[0]);
+              setSignatureURL(URL.createObjectURL(e.target.files[0]));
             }}
           />
         </div>
@@ -61,7 +65,10 @@ function UploadImage({
           <button
             type="button"
             className=" text-[#ff0000] font-semibold hover:opacity-70 mt-4 mr-4"
-            onClick={(e) => setSignaturePhoto("")}
+            onClick={(e) => {
+              setSignaturePhoto(null);
+              setSignatureURL("");
+            }}
           >
             Remove
           </button>
