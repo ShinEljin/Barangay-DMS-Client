@@ -105,6 +105,15 @@ function Claiming() {
     }
   }
 
+  function deselectAll(e) {
+    setMultipleIds([]);
+    for (let i = 0; i < inputsRef.current.length; i++) {
+      if (inputsRef.current[i] !== null) {
+        inputsRef.current[i].checked = false;
+      }
+    }
+  }
+
   function claimedMultiple() {
     Swal.fire({
       title: "Mark All As Claimed?",
@@ -143,17 +152,17 @@ function Claiming() {
   return (
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">
       <div className="p-4 text-sm mt-2 | lg:text-lg">
-        <table className="text-center shadow-lg rounded-2xl  mx-auto bg-white overflow-hidden | md:w-full transition-all duration-300">
+        <table className="text-left shadow-lg rounded-2xl  mx-auto bg-white overflow-hidden | md:w-full transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
               <td></td>
-              <td className="p-4">Processed Date</td>
-              <td className="p-4">Name</td>
+              <td className="p-4 pl-0">Processed Date</td>
+              <td className="p-4 pl-0">Name</td>
               <td>Document</td>
               <td className="invisible absolute | md:visible md:static">
                 Purpose
               </td>
-              <td>Action</td>
+              <td className="text-center">Action</td>
             </tr>
           </thead>
 
@@ -171,6 +180,12 @@ function Claiming() {
                         onClick={selectAll}
                       >
                         Select All
+                      </span>
+                      <span
+                        className="hover:cursor-pointer hover:bg-[#d6d5da]  p-2"
+                        onClick={deselectAll}
+                      >
+                        Deselect All
                       </span>
                     </div>
                     <div>
@@ -201,7 +216,7 @@ function Claiming() {
             )}
             {requests && requests.length === 0 && (
               <tr>
-                <td className="align-middle p-2 py-5" colSpan={8}>
+                <td className="align-middle p-2 py-5 text-center" colSpan={8}>
                   NO REQUESTS FOUND!
                 </td>
               </tr>
@@ -238,7 +253,7 @@ function Claiming() {
                         ? request.specify
                         : request.purpose}
                     </td>
-                    <td>
+                    <td className="text-center">
                       <button data-title="SEE ALL DETAILS">
                         <AccountBoxIcon
                           className="hover:cursor-pointer"

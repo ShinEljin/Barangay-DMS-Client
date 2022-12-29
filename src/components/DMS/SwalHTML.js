@@ -40,15 +40,37 @@ function SwalHTML() {
       <strong>Address:</strong> ${record.address} <br/>
       <strong>Phone:</strong> ${record.phone} <br/>
       <strong>Email:</strong> ${record.email} <br/>
-      <strong>Birth Date:</strong> ${record.bdate} <br/>
-      <strong>Person To Notify:</strong> ${record.person2Notif} <br/>
-      <strong>Relationship:</strong> ${record.relationship} <br/>
-      <strong>Person To Notify (Number):</strong> ${
-        record.person2NotifPhone
-      } <br/>
+      <strong>Birth Date (yyyy/mm/dd): </strong> ${record.bdate} <br/>
       <strong>Gender:</strong> ${record.gender} <br/>
-      <strong>School Attainment:</strong> ${record.schoolAttainment} <br/>
-      <strong>Years of Residency:</strong> ${record.yearsOfResidency} <br/>
+      ${
+        record.person2Notif
+          ? `<strong>Person To Notify:</strong> ${record.person2Notif} <br/>`
+          : ""
+      }
+      ${
+        record.relationship
+          ? `<strong>Relationship:</strong> ${record.relationship} <br/>`
+          : ""
+      }
+      ${
+        record.person2NotifPhone
+          ? `<strong>Person To Notify (Number):</strong> ${record.person2NotifPhone} <br/>`
+          : ""
+      }
+      ${
+        record.schoolAttainment
+          ? `  <strong>School Attainment:</strong> ${record.schoolAttainment} <br/>`
+          : ""
+      }
+      ${
+        record.yearsOfResidency
+          ? `<strong>Years of Residency:</strong> ${record.yearsOfResidency} <br/>`
+          : ""
+      }
+ 
+ 
+    
+ 
       ${
         record.recordStatus === "Pending"
           ? `<strong>Proof:</strong>

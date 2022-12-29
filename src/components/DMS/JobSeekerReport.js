@@ -219,9 +219,9 @@ function JobSeekerReport({
         </div>
       </div>
 
-      <div className="inline-block float-right text-white font-bold px-4 py-2 rounded-lg bg-[#033AA9]">
+      <button className="inline-block float-right text-white font-bold px-6 py-3 rounded-lg hover:opacity-70 hover:cursor-pointer bg-[#033AA9]">
         Download Report
-      </div>
+      </button>
     </div>
   );
 }

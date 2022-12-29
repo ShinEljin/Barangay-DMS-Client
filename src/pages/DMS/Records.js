@@ -202,21 +202,21 @@ function Records() {
       </div>
 
       <div className="p-4 text-sm | lg:text-lg">
-        <table className="text-center shadow-lg rounded-2xl bg-white mx-auto overflow-hidden w-full | md:w-full transition-all duration-300">
+        <table className=" text-left shadow-lg rounded-2xl bg-white mx-auto overflow-hidden w-full | md:w-full transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
-              <td className="p-4">Full Name</td>
-              <td className="p-4 invisible absolute | md:visible md:static">
-                Birthday
+              <td className="p-4 pl-2">Full Name</td>
+              <td className="p-4 pl-1 invisible absolute | md:visible md:static">
+                Birth Date
               </td>
-              <td className="p-4 invisible absolute | md:visible md:static">
+              <td className="p-4 pl-1 invisible absolute | md:visible md:static">
                 Address
               </td>
-              <td className="p-4 invisible absolute | md:visible md:static">
+              <td className="p-4 pl-1 invisible absolute | md:visible md:static">
                 Phone Number
               </td>
               <td>Status</td>
-              <td>Action</td>
+              <td className="text-center">Action</td>
             </tr>
           </thead>
 
@@ -224,8 +224,8 @@ function Records() {
             {records.length === 0 && startLoading()}
             {(filteredRecords.length !== 0 || recordsEmpty) && stopLoading()}
             {recordsEmpty && (
-              <tr>
-                <td className="align-middle p-2 py-10" colSpan={8}>
+              <tr className="text-center">
+                <td className="align-middle p-2 py-10 text-center" colSpan={8}>
                   NO RECORDS FOUND!
                 </td>
               </tr>
@@ -254,7 +254,7 @@ function Records() {
                       {record.phone}
                     </td>
                     <td> {record.recordStatus}</td>
-                    <td>
+                    <td className="text-center">
                       <button data-title="SEE ALL DETAILS">
                         <AccountBoxIcon
                           className="hover:cursor-pointer"

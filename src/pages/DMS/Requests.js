@@ -242,6 +242,15 @@ function Requests() {
     }
   }
 
+  function deselectAll(e) {
+    setMultipleIds([]);
+    for (let i = 0; i < inputsRef.current.length; i++) {
+      if (inputsRef.current[i] !== null) {
+        inputsRef.current[i].checked = false;
+      }
+    }
+  }
+
   function processMultiple() {
     Swal.fire({
       title: "Mark All As Processed?",
@@ -391,7 +400,7 @@ function Requests() {
       <div className="mt-1 mr-5 transition-all duration-300 | md:ml-[90px] | xl:ml-[350px] ">
         <div className="p-1 mt-4 flex justify-center md:items-center | md:justify-end ">
           <a
-            href="https://barangay564-forms.cyclic.app/"
+            href="https://barangay564-forms.up.railway.app/"
             target="_blank"
             rel="noreferrer"
           >
@@ -439,17 +448,17 @@ function Requests() {
             )}
           </div>
         </div>
-        <table className="text-center shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden w-full | transition-all duration-300">
+        <table className="text-left shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden w-full | transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
               <td></td>
-              <td className="p-4">Request Dates</td>
-              <td className="p-4">Name</td>
+              <td className="p-4 pl-0">Request Dates</td>
+              <td className="p-4 pl-0">Name</td>
               <td className="invisible absolute | md:visible md:static">
                 Document
               </td>
               <td className="relative hover:cursor-pointer ">Record Status</td>
-              <td>Action</td>
+              <td className="text-center">Action</td>
             </tr>
           </thead>
 
@@ -467,6 +476,12 @@ function Requests() {
                         className="hover:cursor-pointer hover:bg-[#d6d5da]  p-2"
                       >
                         Select All
+                      </span>
+                      <span
+                        className="hover:cursor-pointer hover:bg-[#d6d5da]  p-2"
+                        onClick={deselectAll}
+                      >
+                        Deselect All
                       </span>
                     </div>
                     <div>
@@ -562,7 +577,7 @@ function Requests() {
             )}
             {requests && requests.length === 0 && (
               <tr>
-                <td className="align-middle p-2 py-5" colSpan={8}>
+                <td className="align-middle p-2 py-5 text-center" colSpan={8}>
                   NO REQUESTS FOUND!
                 </td>
               </tr>
@@ -586,7 +601,7 @@ function Requests() {
                         id={request._id}
                       />
                     </td>
-                    <td className="p-2">{request.requestDate}</td>
+                    <td className="p-2 pl-0">{request.requestDate}</td>
                     <td>
                       {request.recordID.firstName +
                         " " +
@@ -594,11 +609,11 @@ function Requests() {
                         " " +
                         request.recordID.lastName}
                     </td>
-                    <td className="p-1 invisible absolute | md:visible md:static">
+                    <td className="p-1 pl-0 invisible absolute | md:visible md:static">
                       {request.document}
                     </td>
                     <td>{request.recordID.recordStatus}</td>
-                    <td>
+                    <td className="text-center">
                       <button data-title="SEE ALL DETAILS">
                         <AccountBoxIcon
                           className="hover:cursor-pointer"

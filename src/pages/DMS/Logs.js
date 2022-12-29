@@ -57,12 +57,25 @@ function Logs() {
     const fields = [
       { label: "Request ID", value: "_id" },
       {
-        label: "Record ID (search on records table/data)",
-        value: "recordID",
+        label: "Record ID",
+        value: "recordID._id",
+      },
+      {
+        label: "Last Name",
+        value: "recordID.lastName",
+      },
+      {
+        label: "First Name",
+        value: "recordID.firstName",
+      },
+      {
+        label: "Middle Name",
+        value: "recordID.middleName",
       },
       { label: "Request Date", value: "requestDate" },
       { label: "Processed Date", value: "processedDate" },
       { label: "Claimed Date", value: "claimedDate" },
+      { label: "Rejected Date", value: "rejectedDate" },
       { label: "Document", value: "document" },
       { label: "Purpose", value: "purpose" },
       { label: "Specify", value: "specify" },
@@ -163,17 +176,17 @@ function Logs() {
             Archive
           </button>
         </div>
-        <table className="text-center shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden w-full | md:w-full transition-all duration-300">
+        <table className="text-left shadow-lg rounded-r-2xl rounded-bl-2xl mx-auto bg-white overflow-hidden w-full | md:w-full transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
               {statusFilter !== "Archive" && (
-                <td className="p-4">
+                <td className="p-4 pl-2">
                   {statusFilter === "Claimed" && "Claimed Date"}
                   {statusFilter === "Rejected" && "Rejected Date"}
                 </td>
               )}
 
-              <td className="p-4">Name</td>
+              <td className="p-4 pl-2">Name</td>
               <td>Document</td>
               <td className="invisible absolute | md:visible md:static">
                 Purpose
@@ -181,7 +194,7 @@ function Logs() {
               <td className="invisible absolute | md:visible md:static">
                 Status
               </td>
-              <td width="10%">Action</td>
+              <td className="text-center">Action</td>
             </tr>
           </thead>
 
@@ -190,7 +203,7 @@ function Logs() {
             {(filteredRequests.length !== 0 || requestsEmpty) && stopLoading()}
             {requestsEmpty && (
               <tr>
-                <td className="align-middle p-2 py-8" colSpan={8}>
+                <td className="align-middle p-2 py-8 text-center" colSpan={8}>
                   NO LOGS FOUND!
                 </td>
               </tr>
@@ -209,21 +222,21 @@ function Logs() {
                       </td>
                     )}
 
-                    <td className="p-2 py-5">
+                    <td className="p-2 py-5 pl-2">
                       {request.recordID.firstName +
                         " " +
                         request.recordID.middleName +
                         " " +
                         request.recordID.lastName}
                     </td>
-                    <td className="p-2">{request.document}</td>
+                    <td className="p-2 pl-0">{request.document}</td>
                     <td className="invisible absolute | md:visible md:static">
                       {request.purpose}
                     </td>
                     <td className="invisible absolute | md:visible md:static">
                       {request.status}
                     </td>
-                    <td width="10%">
+                    <td className="text-center">
                       <button data-title="SEE ALL DETAILS">
                         <AccountBoxIcon
                           className="hover:cursor-pointer"
