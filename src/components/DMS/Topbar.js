@@ -15,7 +15,7 @@ function TopBar(props) {
         </div>
         <div className="flex flex-row items-center ">
           <img
-            src="../images/user-icon.png"
+            src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
             alt="icon"
             width="45px"
             height="45px"

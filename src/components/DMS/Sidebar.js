@@ -50,7 +50,7 @@ function Sidebar({ setTab, tab }) {
         <div className="flex | md:p-6 md:pb-[3.5rem] | xl:p-6 ease-linear">
           <img
             alt="Barangay Seal"
-            src="../images/Barangay_Seal.png"
+            src="https://barangaybucket.s3.ap-southeast-1.amazonaws.com/Barangay_Seal.png"
             className="h-14 w-14 border border-white rounded-full mr-6
                      md:h-6 md:w-6
                      xl:h-14 xl:w-14"

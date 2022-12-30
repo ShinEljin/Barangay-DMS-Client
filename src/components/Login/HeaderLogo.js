@@ -15,7 +15,7 @@ function HeaderLogo() {
       >
         <img
           className="h-20 | md:h-24"
-          src="./images/Barangay_Seal.png"
+          src="https://barangaybucket.s3.ap-southeast-1.amazonaws.com/Barangay_Seal.png"
           alt="Barangay_Seal"
         />
         <span className="invisible md:visible font-montserrat ml-3 text-xl text-white">
@@ -26,7 +26,7 @@ function HeaderLogo() {
       </div>
       <img
         className="h-20 | md:h-24"
-        src="./images/Manila_Seal.png"
+        src="https://barangaybucket.s3.ap-southeast-1.amazonaws.com/Manila_Seal.png"
         alt="Manila_Seal"
       />
     </div>

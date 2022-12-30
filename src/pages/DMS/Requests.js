@@ -10,6 +10,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
 import ReactToPrint from "react-to-print";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 //INTERNAL MODULES
 import api from "../../api/index";
@@ -17,8 +19,12 @@ import SwalLoading from "../../components/DMS/SwalLoading";
 import SwalHTML from "../../components/DMS/SwalHTML";
 import CertificateTemplate from "../../components/DMS/CertificateTemplate";
 import IdTemplate from "../../components/DMS/IdTemplate";
+import { useLogout } from "../../hooks/useLogout";
 
 function Requests() {
+  const { logout } = useLogout();
+  const navigate = useNavigate();
+
   //SWAL
   const { startLoading, stopLoading } = SwalLoading();
   const { requestInfo, recordInfo } = SwalHTML();
@@ -40,28 +46,49 @@ function Requests() {
     async function getRequests() {
       setRequests(null);
       setMultipleIds([]);
-      const response = await api.get("/form/requests");
 
-      var result = response.data.filter(function (object) {
-        return object.recordID.recordStatus === userStatusFilter;
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = user.accessToken;
+      const instance = axios.create({
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      var verifiedResult = response.data.filter(function (object) {
-        return object.recordID.recordStatus === "Verified";
-      });
+      try {
+        const response = await instance({
+          method: "get",
+          url: "/api/form/requests",
+        });
 
-      var pendingResult = response.data.filter(function (object) {
-        return object.recordID.recordStatus === "Pending";
-      });
+        var result = response.data.filter(function (object) {
+          return object.recordID.recordStatus === userStatusFilter;
+        });
 
-      setRequests(result);
-      setRequestNumber(response.data.length);
-      setRequestNumberVerified(verifiedResult.length);
-      setRequestNumberPending(pendingResult.length);
-      inputsRef.current = [];
+        var verifiedResult = response.data.filter(function (object) {
+          return object.recordID.recordStatus === "Verified";
+        });
+
+        var pendingResult = response.data.filter(function (object) {
+          return object.recordID.recordStatus === "Pending";
+        });
+
+        setRequests(result);
+        setRequestNumber(response.data.length);
+        setRequestNumberVerified(verifiedResult.length);
+        setRequestNumberPending(pendingResult.length);
+        inputsRef.current = [];
+      } catch (error) {
+        if (error.response) {
+          Swal.fire("Session Expired", "Please Login", "warning");
+          logout();
+          navigate("/");
+        }
+      }
     }
 
     getRequests();
+    //eslint-disable-next-line
   }, [requestNumber, userStatusFilter]);
 
   function getInfo(request) {

@@ -26,6 +26,10 @@ function App() {
             index
             element={user ? <Navigate to="/user/dashboard" /> : <Login />}
           />
+          <Route
+            path="login"
+            element={user ? <Navigate to="/user/dashboard" /> : <Login />}
+          />
         </Route>
         <Route
           path="/user"
