@@ -80,10 +80,19 @@ function Login() {
                 />
               </div>
             </div>
-            <div className="flex justify-start pb-20">
+            <div className="flex justify-between pb-20">
               <p className="font-semibold text-red-500">
                 {error ? error : serverError}
               </p>
+              <a
+                href="https://barangay564-reg.up.railway.app/forgot"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <p className="font-regular text-white text-base hover:cursor-pointer hover:opacity-80">
+                  Forgot Password
+                </p>
+              </a>
             </div>
 
             <button
@@ -95,6 +104,18 @@ function Login() {
             </button>
           </form>
         </div>
+
+        <p className="text-center text-main-off-white mt-12">
+          Need an account?{" "}
+          <a
+            href="https://barangay564-reg.up.railway.app/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[#DC715C] underline font-semibold"
+          >
+            Register
+          </a>
+        </p>
       </div>
     </div>
   );

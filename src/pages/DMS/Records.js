@@ -4,6 +4,9 @@ import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 
+//MUI COMPONENTS
+import Pagination from "@mui/material/Pagination";
+
 //REACT AND NPM PACKAGES
 import { useEffect, useState } from "react";
 import json2csv from "json2csv";
@@ -27,6 +30,8 @@ function Records() {
   const [sortBy, setSortBy] = useState(1);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [userNumber, setUserNumber] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(5);
 
   //FETCHING RECORDS
   useEffect(() => {
@@ -144,6 +149,15 @@ function Records() {
     setSearchField(searchFieldString);
   }
 
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRecordsPerPage(event.target.value);
+  //   setCurrentPage(1);
+  // };
+
   return (
     // | md:ml-[90px] | xl:ml-[350px]
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">
@@ -205,7 +219,7 @@ function Records() {
         <table className=" text-left shadow-lg rounded-2xl bg-white mx-auto overflow-hidden w-full | md:w-full transition-all duration-300">
           <thead className="text-white bg-dark-blue">
             <tr>
-              <td className="p-4 pl-2">Full Name</td>
+              <td className="p-4 pl-6 | 2xl:pl-[2%]">Full Name</td>
               <td className="p-4 pl-1 invisible absolute | md:visible md:static">
                 Birth Date
               </td>
@@ -231,71 +245,99 @@ function Records() {
               </tr>
             )}
             {filteredRecords.length !== 0 &&
-              filteredRecords.map((record) => {
-                return (
-                  <tr
-                    key={record._id}
-                    className="border-b border-gray bg-white text-black "
-                  >
-                    <td className="p-2 py-5">
-                      {record.lastName +
-                        ", " +
-                        record.firstName +
-                        " " +
-                        record.middleName}
-                    </td>
-                    <td className="p-1 invisible absolute | md:visible md:static">
-                      {record.bdate}
-                    </td>
-                    <td className="p-1 invisible absolute | md:visible md:static">
-                      {record.address}
-                    </td>
-                    <td className="p-1 invisible absolute | md:visible md:static">
-                      {record.phone}
-                    </td>
-                    <td> {record.recordStatus}</td>
-                    <td className="text-center">
-                      <button data-title="SEE ALL DETAILS">
-                        <AccountBoxIcon
-                          className="hover:cursor-pointer"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#000000",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                          onClick={(event) => getInfo(record)}
-                        />
-                      </button>
-                      <button data-title="DELETE RECORD">
-                        <DeleteIcon
-                          className="hover:cursor-pointer"
-                          color="#000000"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#CF1429",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                          onClick={(event) => deleteRecord(record)}
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              filteredRecords
+                .slice(
+                  currentPage * recordsPerPage - recordsPerPage,
+                  currentPage * recordsPerPage
+                )
+                .map((record) => {
+                  return (
+                    <tr
+                      key={record._id}
+                      className="border-b border-gray bg-white text-black "
+                    >
+                      <td className="pl-6 py-5 | 2xl:pl-[2%]">
+                        {record.lastName +
+                          ", " +
+                          record.firstName +
+                          " " +
+                          record.middleName}
+                      </td>
+                      <td className="p-1 invisible absolute | md:visible md:static">
+                        {record.bdate}
+                      </td>
+                      <td className="p-1 invisible absolute | md:visible md:static">
+                        {record.address}
+                      </td>
+                      <td className="p-1 invisible absolute | md:visible md:static">
+                        {record.phone}
+                      </td>
+                      <td> {record.recordStatus}</td>
+                      <td className="text-center">
+                        <button data-title="SEE ALL DETAILS">
+                          <AccountBoxIcon
+                            className="hover:cursor-pointer"
+                            sx={{
+                              fontSize: "40px",
+                              color: "#fff",
+                              backgroundColor: "#000000",
+                              borderRadius: "10px",
+                              margin: "5px",
+                              padding: "3px",
+                              "&:hover": {
+                                opacity: 0.6,
+                              },
+                            }}
+                            onClick={(event) => getInfo(record)}
+                          />
+                        </button>
+                        <button data-title="DELETE RECORD">
+                          <DeleteIcon
+                            className="hover:cursor-pointer"
+                            color="#000000"
+                            sx={{
+                              fontSize: "40px",
+                              color: "#fff",
+                              backgroundColor: "#CF1429",
+                              borderRadius: "10px",
+                              margin: "5px",
+                              padding: "3px",
+                              "&:hover": {
+                                opacity: 0.6,
+                              },
+                            }}
+                            onClick={(event) => deleteRecord(record)}
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
           </tbody>
         </table>
+        <div className="flex justify-end mt-4 mb-4 mr-4">
+          <Pagination
+            className="bg-red"
+            count={Math.ceil(filteredRecords.length / recordsPerPage)}
+            page={currentPage}
+            onChange={handleChange}
+            shape="rounded"
+            variant="outlined"
+            size="large"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "#0D0F33",
+                border: 1,
+                borderRadius: 3,
+                padding: 2,
+              },
+              "& .MuiPaginationItem-root.Mui-selected": {
+                color: "white",
+                backgroundColor: "#0D0F33",
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   );

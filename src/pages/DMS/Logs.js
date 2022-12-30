@@ -180,7 +180,7 @@ function Logs() {
           <thead className="text-white bg-dark-blue">
             <tr>
               {statusFilter !== "Archive" && (
-                <td className="p-4 pl-2">
+                <td className="p-4 pl-6">
                   {statusFilter === "Claimed" && "Claimed Date"}
                   {statusFilter === "Rejected" && "Rejected Date"}
                 </td>
@@ -216,7 +216,7 @@ function Logs() {
                     className="border-b border-gray bg-white text-black"
                   >
                     {statusFilter !== "Archive" && (
-                      <td className="p-2 py-5">
+                      <td className="p-2 py-5 pl-6">
                         {request.claimedDate && request.claimedDate}
                         {request.rejectedDate && request.rejectedDate}
                       </td>

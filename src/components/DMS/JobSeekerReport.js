@@ -13,7 +13,6 @@ import {
 } from "recharts";
 
 function JobSeekerReport({
-  title,
   ageData,
   genderData,
   educData,
@@ -33,10 +32,7 @@ function JobSeekerReport({
   return (
     <div className="bg-white flex-col p-4 rounded-2xl col-span-3">
       <div className="flex flex-row justify-between">
-        <h3 className="font-bold text-xl mb-2">
-          Report
-          <span className="text-sm text-slate-500 font-light"> ({title})</span>
-        </h3>
+        <h3 className="font-bold text-xl mb-2">1st Time Job Seeker</h3>
         <div
           className="hover:cursor-pointer relative"
           onClick={() => setIsMonthOpen(!isMonthOpen)}

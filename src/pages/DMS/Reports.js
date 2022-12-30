@@ -318,7 +318,6 @@ function Reports() {
       <div className="dashboard grid m-5 gap-5 grid-cols-1 | md:ml-[90px] md:grid-cols-2 | xl:ml-[350px] xl:grid-cols-3">
         {ageData && genderData && educAttainmentData && jobSeekerRequests && (
           <JobSeekerReport
-            title="Barangay Indigency"
             ageData={ageData}
             genderData={genderData}
             educData={educAttainmentData}
