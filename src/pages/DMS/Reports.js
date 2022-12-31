@@ -220,7 +220,7 @@ function Reports() {
           fill: "#EB756A",
         },
         {
-          name: "Others",
+          name: "Archive",
           value: parseInt(others.length),
           fill: "#FCBAB2",
         },
@@ -261,7 +261,7 @@ function Reports() {
           fill: "#EB756A",
         },
         {
-          name: "Others",
+          name: "Archive",
           value: parseInt(others.length),
           fill: "#FCBAB2",
         },
@@ -302,7 +302,7 @@ function Reports() {
           fill: "#EB756A",
         },
         {
-          name: "Others",
+          name: "Archive",
           value: parseInt(others.length),
           fill: "#FCBAB2",
         },

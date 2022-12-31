@@ -2,6 +2,9 @@
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SearchIcon from "@mui/icons-material/Search";
 
+//MUI COMPONENTS
+import Pagination from "@mui/material/Pagination";
+
 //REACT AND NPM PACKAGES
 import { useEffect, useState } from "react";
 import json2csv from "json2csv";
@@ -23,6 +26,8 @@ function Logs() {
   const [filteredRequests, setFilteredRequests] = useState(requests);
   const [searchField, setSearchField] = useState("");
   const [statusFilter, setStatusFilter] = useState("Claimed");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(5);
 
   //FETCHING REQUESTS
   useEffect(() => {
@@ -94,7 +99,7 @@ function Logs() {
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", statusFilter + " Logs.csv");
+    link.setAttribute("download", "Logs.csv");
     document.body.appendChild(link);
     link.click();
   }
@@ -119,6 +124,10 @@ function Logs() {
     const searchFieldString = event.target.value.toLocaleLowerCase();
     setSearchField(searchFieldString);
   }
+
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">
@@ -209,57 +218,85 @@ function Logs() {
               </tr>
             )}
             {filteredRequests.length !== 0 &&
-              filteredRequests.map((request) => {
-                return (
-                  <tr
-                    key={request._id}
-                    className="border-b border-gray bg-white text-black"
-                  >
-                    {statusFilter !== "Archive" && (
-                      <td className="p-2 py-5 pl-6">
-                        {request.claimedDate && request.claimedDate}
-                        {request.rejectedDate && request.rejectedDate}
-                      </td>
-                    )}
+              filteredRequests
+                .slice(
+                  currentPage * recordsPerPage - recordsPerPage,
+                  currentPage * recordsPerPage
+                )
+                .map((request) => {
+                  return (
+                    <tr
+                      key={request._id}
+                      className="border-b border-gray bg-white text-black"
+                    >
+                      {statusFilter !== "Archive" && (
+                        <td className="p-2 py-5 pl-6">
+                          {request.claimedDate && request.claimedDate}
+                          {request.rejectedDate && request.rejectedDate}
+                        </td>
+                      )}
 
-                    <td className="p-2 py-5 pl-2">
-                      {request.recordID.firstName +
-                        " " +
-                        request.recordID.middleName +
-                        " " +
-                        request.recordID.lastName}
-                    </td>
-                    <td className="p-2 pl-0">{request.document}</td>
-                    <td className="invisible absolute | md:visible md:static">
-                      {request.purpose}
-                    </td>
-                    <td className="invisible absolute | md:visible md:static">
-                      {request.status}
-                    </td>
-                    <td className="text-center">
-                      <button data-title="SEE ALL DETAILS">
-                        <AccountBoxIcon
-                          className="hover:cursor-pointer"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#000000",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                          onClick={(event) => getInfo(request)}
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+                      <td className="p-2 py-5 pl-2">
+                        {request.recordID.firstName +
+                          " " +
+                          request.recordID.middleName +
+                          " " +
+                          request.recordID.lastName}
+                      </td>
+                      <td className="p-2 pl-0">{request.document}</td>
+                      <td className="invisible absolute | md:visible md:static">
+                        {request.purpose}
+                      </td>
+                      <td className="invisible absolute | md:visible md:static">
+                        {request.status}
+                      </td>
+                      <td className="text-center">
+                        <button data-title="SEE ALL DETAILS">
+                          <AccountBoxIcon
+                            className="hover:cursor-pointer"
+                            sx={{
+                              fontSize: "40px",
+                              color: "#fff",
+                              backgroundColor: "#000000",
+                              borderRadius: "10px",
+                              margin: "5px",
+                              padding: "3px",
+                              "&:hover": {
+                                opacity: 0.6,
+                              },
+                            }}
+                            onClick={(event) => getInfo(request)}
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
           </tbody>
         </table>
+        <div className="flex justify-end mt-4 mb-4 mr-4">
+          <Pagination
+            className="bg-red"
+            count={Math.ceil(filteredRequests.length / recordsPerPage)}
+            page={currentPage}
+            onChange={handleChange}
+            shape="rounded"
+            variant="outlined"
+            size="large"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "#0D0F33",
+                border: 1,
+                borderRadius: 3,
+                padding: 2,
+              },
+              "& .MuiPaginationItem-root.Mui-selected": {
+                color: "white",
+                backgroundColor: "#0D0F33",
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   );

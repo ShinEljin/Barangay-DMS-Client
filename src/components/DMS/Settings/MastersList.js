@@ -10,8 +10,6 @@ function MastersList({ mastersListOpen, setMastersListOpen }) {
     const formData = new FormData();
     formData.append("file", csvFile);
 
-    console.log(formData);
-
     // Use axios to post the file to a server...
   };
 

@@ -6,6 +6,9 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+//MUI COMPONENTS
+import Pagination from "@mui/material/Pagination";
+
 //REACT AND NPM PACKAGES
 import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
@@ -40,6 +43,8 @@ function Requests() {
   const [requestNumberPending, setRequestNumberPending] = useState(null);
   const [userStatusFilter, setUserStatusFilter] = useState("Verified");
   const [multipleIds, setMultipleIds] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage] = useState(5);
 
   //FETCHING REQUESTS
   useEffect(() => {
@@ -48,6 +53,11 @@ function Requests() {
       setMultipleIds([]);
 
       const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        Swal.fire("Session Expired", "Please Login", "warning");
+        logout();
+        navigate("/");
+      }
       const token = user.accessToken;
       const instance = axios.create({
         headers: {
@@ -422,6 +432,10 @@ function Requests() {
     });
   }
 
+  const handleChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   return (
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">
       <div className="mt-1 mr-5 transition-all duration-300 | md:ml-[90px] | xl:ml-[350px] ">
@@ -613,86 +627,46 @@ function Requests() {
             {requests && stopLoading()}
 
             {requests &&
-              requests.map((request, index) => {
-                return (
-                  <tr
-                    key={request._id}
-                    className="border-b border-gray bg-white text-black"
-                  >
-                    <td className="p-2 py-5">
-                      <input
-                        type="checkbox"
-                        className="lg:h-5 lg:w-5 align-middle"
-                        onChange={handleCheckBox}
-                        ref={(el) => (inputsRef.current[index] = el)}
-                        id={request._id}
-                      />
-                    </td>
-                    <td className="p-2 pl-0">{request.requestDate}</td>
-                    <td>
-                      {request.recordID.firstName +
-                        " " +
-                        request.recordID.middleName +
-                        " " +
-                        request.recordID.lastName}
-                    </td>
-                    <td className="p-1 pl-0 invisible absolute | md:visible md:static">
-                      {request.document}
-                    </td>
-                    <td>{request.recordID.recordStatus}</td>
-                    <td className="text-center">
-                      <button data-title="SEE ALL DETAILS">
-                        <AccountBoxIcon
-                          className="hover:cursor-pointer"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#000000",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                          onClick={(event) => getInfo(request)}
+              requests
+                .slice(
+                  currentPage * recordsPerPage - recordsPerPage,
+                  currentPage * recordsPerPage
+                )
+                .map((request, index) => {
+                  return (
+                    <tr
+                      key={request._id}
+                      className="border-b border-gray bg-white text-black"
+                    >
+                      <td className="p-2 py-5">
+                        <input
+                          type="checkbox"
+                          className="lg:h-5 lg:w-5 align-middle"
+                          onChange={handleCheckBox}
+                          ref={(el) => (inputsRef.current[index] = el)}
+                          id={request._id}
                         />
-                      </button>
-
-                      {request.recordID.recordStatus === "Verified" && (
-                        <ReactToPrint
-                          trigger={() => (
-                            <button data-title="GENERATE DOCUMENT">
-                              <LocalPrintshopIcon
-                                className="hover:cursor-pointer"
-                                color="#000000"
-                                sx={{
-                                  fontSize: "40px",
-                                  color: "#fff",
-                                  backgroundColor: "#033AA9",
-                                  borderRadius: "10px",
-                                  margin: "5px",
-                                  padding: "3px",
-                                  "&:hover": {
-                                    opacity: 0.6,
-                                  },
-                                }}
-                              />
-                            </button>
-                          )}
-                          content={() => componentsRef.current[index]}
-                        />
-                      )}
-
-                      {request.recordID.recordStatus === "Verified" ? (
-                        <button data-title="MARK AS PROCESSED">
-                          <FactCheckIcon
+                      </td>
+                      <td className="p-2 pl-0">{request.requestDate}</td>
+                      <td>
+                        {request.recordID.firstName +
+                          " " +
+                          request.recordID.middleName +
+                          " " +
+                          request.recordID.lastName}
+                      </td>
+                      <td className="p-1 pl-0 invisible absolute | md:visible md:static">
+                        {request.document}
+                      </td>
+                      <td>{request.recordID.recordStatus}</td>
+                      <td className="text-center">
+                        <button data-title="SEE ALL DETAILS">
+                          <AccountBoxIcon
                             className="hover:cursor-pointer"
-                            color="#000000"
                             sx={{
                               fontSize: "40px",
                               color: "#fff",
-                              backgroundColor: "#033AA9",
+                              backgroundColor: "#000000",
                               borderRadius: "10px",
                               margin: "5px",
                               padding: "3px",
@@ -700,65 +674,90 @@ function Requests() {
                                 opacity: 0.6,
                               },
                             }}
-                            onClick={(event) => processRequest(request)}
+                            onClick={(event) => getInfo(request)}
                           />
                         </button>
-                      ) : (
-                        <button data-title="MARK AS VERIFIED">
-                          <CheckCircleIcon
-                            className="hover:cursor-pointer"
-                            color="#000000"
-                            sx={{
-                              fontSize: "40px",
-                              color: "#fff",
-                              backgroundColor: "#033AA9",
-                              borderRadius: "10px",
-                              margin: "5px",
-                              padding: "3px",
-                              "&:hover": {
-                                opacity: 0.6,
-                              },
-                            }}
-                            onClick={(event) => markVerified(request)}
+
+                        {request.recordID.recordStatus === "Verified" && (
+                          <ReactToPrint
+                            trigger={() => (
+                              <button data-title="GENERATE DOCUMENT">
+                                <LocalPrintshopIcon
+                                  className="hover:cursor-pointer"
+                                  color="#000000"
+                                  sx={{
+                                    fontSize: "40px",
+                                    color: "#fff",
+                                    backgroundColor: "#033AA9",
+                                    borderRadius: "10px",
+                                    margin: "5px",
+                                    padding: "3px",
+                                    "&:hover": {
+                                      opacity: 0.6,
+                                    },
+                                  }}
+                                />
+                              </button>
+                            )}
+                            content={() => componentsRef.current[index]}
                           />
-                        </button>
-                      )}
+                        )}
 
-                      {request.recordID.recordStatus === "Verified" &&
-                      request.document === "Barangay ID" ? (
-                        <IdTemplate
-                          ref={(el) => (componentsRef.current[index] = el)}
-                          requestDetails={request}
-                        />
-                      ) : (
-                        <CertificateTemplate
-                          ref={(el) => (componentsRef.current[index] = el)}
-                          requestDetails={request}
-                        />
-                      )}
+                        {request.recordID.recordStatus === "Verified" ? (
+                          <button data-title="MARK AS PROCESSED">
+                            <FactCheckIcon
+                              className="hover:cursor-pointer"
+                              color="#000000"
+                              sx={{
+                                fontSize: "40px",
+                                color: "#fff",
+                                backgroundColor: "#033AA9",
+                                borderRadius: "10px",
+                                margin: "5px",
+                                padding: "3px",
+                                "&:hover": {
+                                  opacity: 0.6,
+                                },
+                              }}
+                              onClick={(event) => processRequest(request)}
+                            />
+                          </button>
+                        ) : (
+                          <button data-title="MARK AS VERIFIED">
+                            <CheckCircleIcon
+                              className="hover:cursor-pointer"
+                              color="#000000"
+                              sx={{
+                                fontSize: "40px",
+                                color: "#fff",
+                                backgroundColor: "#033AA9",
+                                borderRadius: "10px",
+                                margin: "5px",
+                                padding: "3px",
+                                "&:hover": {
+                                  opacity: 0.6,
+                                },
+                              }}
+                              onClick={(event) => markVerified(request)}
+                            />
+                          </button>
+                        )}
 
-                      <button data-title="REJECT REQUEST">
-                        <CancelIcon
-                          className="hover:cursor-pointer"
-                          color="#000000"
-                          sx={{
-                            fontSize: "40px",
-                            color: "#fff",
-                            backgroundColor: "#CF1429",
-                            borderRadius: "10px",
-                            margin: "5px",
-                            padding: "3px",
-                            "&:hover": {
-                              opacity: 0.6,
-                            },
-                          }}
-                          onClick={(event) => rejectRequest(request)}
-                        />
-                      </button>
+                        {request.recordID.recordStatus === "Verified" &&
+                        request.document === "Barangay ID" ? (
+                          <IdTemplate
+                            ref={(el) => (componentsRef.current[index] = el)}
+                            requestDetails={request}
+                          />
+                        ) : (
+                          <CertificateTemplate
+                            ref={(el) => (componentsRef.current[index] = el)}
+                            requestDetails={request}
+                          />
+                        )}
 
-                      {request.recordID.recordStatus === "Pending" && (
-                        <button data-title="ARCHIVE REQUEST">
-                          <ArchiveIcon
+                        <button data-title="REJECT REQUEST">
+                          <CancelIcon
                             className="hover:cursor-pointer"
                             color="#000000"
                             sx={{
@@ -772,16 +771,61 @@ function Requests() {
                                 opacity: 0.6,
                               },
                             }}
-                            onClick={(event) => archiveRequest(request)}
+                            onClick={(event) => rejectRequest(request)}
                           />
                         </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
+
+                        {request.recordID.recordStatus === "Pending" && (
+                          <button data-title="ARCHIVE REQUEST">
+                            <ArchiveIcon
+                              className="hover:cursor-pointer"
+                              color="#000000"
+                              sx={{
+                                fontSize: "40px",
+                                color: "#fff",
+                                backgroundColor: "#CF1429",
+                                borderRadius: "10px",
+                                margin: "5px",
+                                padding: "3px",
+                                "&:hover": {
+                                  opacity: 0.6,
+                                },
+                              }}
+                              onClick={(event) => archiveRequest(request)}
+                            />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
           </tbody>
         </table>
+        <div className="flex justify-end mt-4 mb-4 mr-4">
+          {requests && (
+            <Pagination
+              className="bg-red"
+              count={Math.ceil(requests.length / recordsPerPage)}
+              page={currentPage}
+              onChange={handleChange}
+              shape="rounded"
+              variant="outlined"
+              size="large"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  color: "#0D0F33",
+                  border: 1,
+                  borderRadius: 3,
+                  padding: 2,
+                },
+                "& .MuiPaginationItem-root.Mui-selected": {
+                  color: "white",
+                  backgroundColor: "#0D0F33",
+                },
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

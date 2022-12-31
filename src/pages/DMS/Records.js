@@ -153,11 +153,6 @@ function Records() {
     setCurrentPage(value);
   };
 
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRecordsPerPage(event.target.value);
-  //   setCurrentPage(1);
-  // };
-
   return (
     // | md:ml-[90px] | xl:ml-[350px]
     <div className="document bg-light-gray transition-all duration-300 | md:ml-[70px] | xl:ml-[330px]">

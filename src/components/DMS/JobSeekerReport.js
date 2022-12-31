@@ -11,6 +11,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import json2csv from "json2csv";
 
 function JobSeekerReport({
   ageData,
@@ -28,6 +29,86 @@ function JobSeekerReport({
 
     return date.toLocaleString("en-US", { month: "long" });
   }
+
+  function convertJsonToCsv(jsonData) {
+    const fields = [
+      { label: "Age Bracket", value: "age" },
+      {
+        label: "Requests",
+        value: "ageRequests",
+      },
+      {
+        label: "",
+        value: "",
+      },
+      {
+        label: "Gender",
+        value: "gender",
+      },
+      {
+        label: "Requests",
+        value: "genderRequests",
+      },
+      {
+        label: "",
+        value: "",
+      },
+      {
+        label: "Educational Attainment",
+        value: "educAtt",
+      },
+      {
+        label: "Requests",
+        value: "educRequests",
+      },
+    ];
+    const opts = { fields };
+    try {
+      const csv = json2csv.parse(jsonData, opts);
+      return csv;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function downloadCsv(csv) {
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "Job Seeker Report.csv");
+    document.body.appendChild(link);
+    link.click();
+  }
+
+  const handleDownload = async () => {
+    const data = [
+      {
+        age: "Age: <10",
+        Requests: ageData[0].Requests,
+      },
+      { age: "Age: 10-19", ageRequests: ageData[1].Requests },
+      { age: "Age: 20-29", ageRequests: ageData[2].Requests },
+      { age: "Age: 30-39", ageRequests: ageData[3].Requests },
+      { age: "Age: 40-49", ageRequests: ageData[4].Requests },
+      { age: "Age: 50-59", ageRequests: ageData[5].Requests },
+      { age: "Age: >=60", ageRequests: ageData[6].Requests },
+      { age: "Age: >=60", ageRequests: ageData[6].Requests },
+      { gender: "Male", genderRequests: genderData.male },
+      { gender: "Female", genderRequests: genderData.female },
+      { educAtt: "Out of School Youth", educRequests: educData[0].value },
+      { educAtt: "Elementary Graduate", educRequests: educData[1].value },
+      { educAtt: "High School Graduate", educRequests: educData[2].value },
+      {
+        educAtt: "Senior High School Graduate",
+        educRequests: educData[3].value,
+      },
+      { educAtt: "College Graduate", educRequests: educData[4].value },
+      { educAtt: "Technical Vocational", educRequests: educData[5].value },
+    ];
+    const csv1 = convertJsonToCsv(data);
+
+    downloadCsv(csv1);
+  };
 
   return (
     <div className="bg-white flex-col p-4 rounded-2xl col-span-3">
@@ -215,7 +296,10 @@ function JobSeekerReport({
         </div>
       </div>
 
-      <button className="inline-block float-right text-white font-bold px-6 py-3 rounded-lg hover:opacity-70 hover:cursor-pointer bg-[#033AA9]">
+      <button
+        className="inline-block float-right text-white font-bold px-6 py-3 rounded-lg hover:opacity-70 hover:cursor-pointer bg-[#033AA9]"
+        onClick={handleDownload}
+      >
         Download Report
       </button>
     </div>
