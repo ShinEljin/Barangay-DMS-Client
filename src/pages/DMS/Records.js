@@ -46,6 +46,7 @@ function Records() {
         setUserNumber(response.data.length);
         setRecordsEmpty(false);
       }
+      setCurrentPage(1);
     }
 
     getRequests();
@@ -309,30 +310,49 @@ function Records() {
                   );
                 })}
           </tbody>
+          <tr className="h-16">
+            <td colSpan={6}>
+              <div className="flex justify-between items-center mt-8 mb-4 px-6">
+                <div className="text-sm text-slate-700">
+                  showing{" "}
+                  <span className="font-bold">
+                    {filteredRecords.length === 0
+                      ? 0
+                      : currentPage * recordsPerPage - recordsPerPage + 1}
+                    -
+                    {currentPage * recordsPerPage >= filteredRecords.length
+                      ? filteredRecords.length
+                      : currentPage * recordsPerPage}
+                  </span>{" "}
+                  from{" "}
+                  <span className="font-bold">{filteredRecords.length}</span>{" "}
+                  records
+                </div>
+                <Pagination
+                  className="bg-red"
+                  count={Math.ceil(filteredRecords.length / recordsPerPage)}
+                  page={currentPage}
+                  onChange={handleChange}
+                  shape="rounded"
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      color: "#0D0F33",
+                      border: 1,
+                      borderRadius: 3,
+                      padding: 2,
+                    },
+                    "& .MuiPaginationItem-root.Mui-selected": {
+                      color: "white",
+                      backgroundColor: "#0D0F33",
+                    },
+                  }}
+                />
+              </div>
+            </td>
+          </tr>
         </table>
-        <div className="flex justify-end mt-4 mb-4 mr-4">
-          <Pagination
-            className="bg-red"
-            count={Math.ceil(filteredRecords.length / recordsPerPage)}
-            page={currentPage}
-            onChange={handleChange}
-            shape="rounded"
-            variant="outlined"
-            size="large"
-            sx={{
-              "& .MuiPaginationItem-root": {
-                color: "#0D0F33",
-                border: 1,
-                borderRadius: 3,
-                padding: 2,
-              },
-              "& .MuiPaginationItem-root.Mui-selected": {
-                color: "white",
-                backgroundColor: "#0D0F33",
-              },
-            }}
-          />
-        </div>
       </div>
     </div>
   );
