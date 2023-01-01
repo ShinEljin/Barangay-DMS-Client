@@ -232,8 +232,8 @@ function Requests() {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes",
     }).then(async (result) => {
-      startLoading();
       if (result.isConfirmed) {
+        startLoading();
         const response = await api.patch(`/form/archive/${request._id}`);
 
         if (response.status === 200) {
