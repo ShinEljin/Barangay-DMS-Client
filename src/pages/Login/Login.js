@@ -85,7 +85,7 @@ function Login() {
                 {error ? error : serverError}
               </p>
               <a
-                href="https://barangay564-reg.up.railway.app/forgot"
+                href="https://register.barangay564.online/forgot"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -108,7 +108,7 @@ function Login() {
         <p className="text-center text-main-off-white mt-12">
           Need an account?{" "}
           <a
-            href="https://barangay564-reg.up.railway.app/"
+            href="https://register.barangay564.online"
             target="_blank"
             rel="noreferrer"
             className="text-[#DC715C] underline font-semibold"
